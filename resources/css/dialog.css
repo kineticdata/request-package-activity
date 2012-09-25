@@ -1,37 +1,51 @@
-.sourceDetails {
+.sourceDetails, .submissionDetails {
     background-color: #FFFFFF;
     padding: 5px;
     overflow-y: scroll;
 }
-.sourceDetails .header {
+.sourceDetails .header, .submissionDetails .header {
     background-color: #A1A1A1;
     color: white;
     font-size: 1.1em;
     font-weight: bold;
     padding: 5px;
 }
-.sourceDetails .info {
+.submissionDetails .header a {
+    color: white;
+}
+.submissionDetails .header a:hover {
+    text-decoration: underline;
+}
+.submissionDetails .header .serviceItem {
+    margin-right: 150px;
+}
+.submissionDetails .header .requestId {
+    float: right;
+    text-align: right;
+    width: 150px;
+}
+.sourceDetails .info, .submissionDetails .info {
     padding: 5px;
 }
-.sourceDetails .cancel {
+.sourceDetails .cancel, .submissionDetails .cancel {
     text-align: right;
 }
-.sourceDetails .label {
+.sourceDetails .label, .submissionDetails .label {
     float: left;
     font-weight: bold;
     width: 150px;
 }
-.sourceDetails .value {
+.sourceDetails .value, .submissionDetails .value {
     margin-left: 150px;
 }
-.sourceDetails .workLog .workInfo {
+.sourceDetails .workLog .workInfo, .submissionDetails .tasks .task {
     border: 1px solid #C8C8C8;
     margin-top: 5px;
     padding: 5px;
 }
-.sourceDetails .workLog .workInfo.odd {
+.sourceDetails .workLog .workInfo.odd, .submissionDetails .tasks .task.odd {
     background-color: #E9E9E9;
 }
-.sourceDetails .workLog .workInfo.even {
+.sourceDetails .workLog .workInfo.even, .submissionDetails .tasks .task.even {
     background-color: #F9F9F9;
 }
