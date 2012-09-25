@@ -1,0 +1,130 @@
+{
+    "activity": {
+        "columns": [
+            "Id",
+            "Status",
+            "Created At",
+            "Description",
+            "Source",
+            "Has Children",
+            "Instance Id"
+        ],
+        "sources": {
+            "Request": {
+                "modelName": "Activity Request",
+                "qualificationName": "By Submitter",
+                "parameterNames": [
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description",
+                    "Has Children": "Id",
+                    "Instance Id": "Instance Id"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Incident": {
+                "modelName": "Activity Incident",
+                "qualificationName": "By Submitter",
+                "parameterNames": [
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Change": {
+                "modelName": "Activity Change",
+                "qualificationName": "By Submitter",
+                "parameterNames": [
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Work Order": {
+                "modelName": "Activity Work Order",
+                "qualificationName": "By Submitter",
+                "parameterNames": [
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    },
+    
+    "children": {
+        "columns": [
+            "Id",
+            "Status",
+            "Created At",
+            "Description",
+            "Source"
+        ],
+        "sources": {
+            "Incident": {
+                "modelName": "Activity Incident",
+                "qualificationName": "By Request Id",
+                "parameterNames": [
+                    "Request Id",
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Change": {
+                "modelName": "Activity Change",
+                "qualificationName": "By Request Id",
+                "parameterNames": [
+                    "Request Id",
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Work Order": {
+                "modelName": "Activity Work Order",
+                "qualificationName": "By Request Id",
+                "parameterNames": [
+                    "Request Id",
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    }
+}

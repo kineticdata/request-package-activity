@@ -1,0 +1,76 @@
+<%!
+    public static class JsonBase {
+        private org.json.simple.JSONObject jsonObject;
+        
+        public JsonBase(org.json.simple.JSONObject jsonObject) {
+            this.jsonObject = jsonObject;
+        }
+        
+        public java.util.List<String> getKeys() {
+            java.util.List<String> result = new java.util.ArrayList<String>();
+            java.util.Iterator iterator = jsonObject.keySet().iterator();
+            while(iterator.hasNext()) {
+                result.add(iterator.next().toString());
+            }
+            return result;
+        }
+        
+        public Boolean getBoolean(String propertyName) {
+            Boolean result = null;
+            Object object = jsonObject.get(propertyName);
+            if (object instanceof Boolean) {
+                result = (Boolean)object;
+            } else if (object != null) {
+                throw new ClassCastException("Improper request, the '"+propertyName+"' property is not a Boolean.");
+            }
+            return result;
+        }
+        
+        public Number getNumber(String propertyName) {
+            Number result = null;
+            Object object = jsonObject.get(propertyName);
+            if (object instanceof Number) {
+                result = (Number)object;
+            } else if (object != null) {
+                throw new ClassCastException("Improper request, the '"+propertyName+"' property is not a Number.");
+            }
+            return result;
+        }
+        
+        public JsonBase getObject(String propertyName) {
+            JsonBase result = null;
+            Object object = jsonObject.get(propertyName);
+            if (object instanceof org.json.simple.JSONObject) {
+                result = new JsonBase((org.json.simple.JSONObject)object);
+            } else if (object != null) {
+                throw new ClassCastException("Improper request, the '"+propertyName+"' property is not an Object.");
+            }
+            return result;
+        }
+        
+        public String getString(String propertyName) {
+            String result = null;
+            Object object = jsonObject.get(propertyName);
+            if (object instanceof String) {
+                result = (String)object;
+            } else if (object != null) {
+                throw new ClassCastException("Improper request, the '"+propertyName+"' property is not a String.");
+            }
+            return result;
+        }
+        
+        public java.util.List<String> getStringArray(String propertyName) {
+            java.util.List<String> result = null;
+            Object object = jsonObject.get(propertyName);
+            if (object instanceof org.json.simple.JSONArray) {
+                result = new java.util.ArrayList();
+                for (Object item : (org.json.simple.JSONArray)object) {
+                    result.add(item.toString());
+                }
+            } else if (object != null) {
+                throw new ClassCastException("Improper request, the '"+propertyName+"' property is not a String.");
+            }
+            return result;
+        }
+    }
+%>

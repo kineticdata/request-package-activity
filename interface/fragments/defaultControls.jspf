@@ -1,0 +1,28 @@
+<div class="tableControls">
+    <div class="tableControl sources">
+        <span>Sources</span> <input class="modify" type="button" value="Modify"></input>
+        <div id="checkboxes" class="hidden">
+            <div class="container"></div>
+            <div><input class="save" type="button" value="Save"></input></div>
+        </div>
+    </div>
+    <div class="tableControl previousPage">Previous</div>
+    <div class="tableControl refresh">Refresh</div>
+    <div class="tableControl nextPage">Next</div>
+    <div class="tableControl sortOrder">
+        Sort <select>
+            <option value="descending">Latest</option>
+            <option value="ascending">Oldest</option>
+        </select>
+    </div>
+    <div class="tableControl pageSize">
+        Show <select>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+        </select>
+    </div>
+    <div class="clear"></div>
+</div>

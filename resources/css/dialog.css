@@ -1,0 +1,37 @@
+.sourceDetails {
+    background-color: #FFFFFF;
+    padding: 5px;
+    overflow-y: scroll;
+}
+.sourceDetails .header {
+    background-color: #A1A1A1;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 5px;
+}
+.sourceDetails .info {
+    padding: 5px;
+}
+.sourceDetails .cancel {
+    text-align: right;
+}
+.sourceDetails .label {
+    float: left;
+    font-weight: bold;
+    width: 150px;
+}
+.sourceDetails .value {
+    margin-left: 150px;
+}
+.sourceDetails .workLog .workInfo {
+    border: 1px solid #C8C8C8;
+    margin-top: 5px;
+    padding: 5px;
+}
+.sourceDetails .workLog .workInfo.odd {
+    background-color: #E9E9E9;
+}
+.sourceDetails .workLog .workInfo.even {
+    background-color: #F9F9F9;
+}

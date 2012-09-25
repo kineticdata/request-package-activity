@@ -1,0 +1,91 @@
+#overlay {
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Table controls style properties */
+.tableControls .tableControl {
+    background-color: #A1A1A1;
+    color: #FFFFFF;
+    cursor: pointer;
+    float: left;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 24px; /* this is made equal to the height of the input button element */
+    margin-right: 5px;
+    padding: 2px 5px;
+    vertical-align: top;
+}
+.tableControl.sources {
+    position: relative;
+}
+.tableControl.sources #checkboxes {
+    background-color: #A1A1A1;
+    left: 0;
+    position: absolute;
+    top: 28px;
+    width: 100%;
+}
+.tableControl.sources #checkboxes .container div {
+    padding: 2px;
+    white-space: nowrap;
+}
+.tableControl.sources #checkboxes .container input {
+    margin: 3px;
+}
+.tableControl.pageSize, .tableControl.sortOrder {
+    float: right;
+}
+/* Main table style properties */
+#tableContainer table#activity {
+    margin: 10px 0;
+}
+#tableContainer table#activity thead th {
+    padding: 5px;
+}
+#tableContainer table#activity tbody tr {
+    height: 30px;
+}
+#tableContainer table#activity tbody tr.even {
+    background: #E0E0E0;
+}
+#tableContainer table#activity tbody tr.odd {
+    background: #E9E9E9;
+}
+#tableContainer table#activity td.links a.minimize, a.maximize {
+    font-size: 18px;
+    font-family: monospace;
+    font-weight: bold;
+}
+#tableContainer table#activity td.links {
+    text-align: center;
+}
+#tableContainer table#activity td.source {
+    color: #777777;
+    font-weight: bold;
+}
+/* Child row style properties */
+#tableContainer table#activity tbody tr.child {
+    height: 0;
+}
+#tableContainer table#activity tbody tr.child .childContainer {
+    display: none;
+    padding: 0 0 10px 35px;
+}
+.childTable {
+}
+#tableContainer table#activity .childTable thead tr {
+    height: 0;
+}
+#tableContainer table#activity .childTable thead tr th {
+    padding: 0 5px;
+}
+#tableContainer table#activity .childTable tbody tr {
+    background: #F6F6F6;
+}

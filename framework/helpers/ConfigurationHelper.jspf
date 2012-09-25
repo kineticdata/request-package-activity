@@ -1,0 +1,19 @@
+<%!
+    public static class ConfigurationHelper {
+        private static JsonBase configuration;
+        
+        public static void loadConfiguration(String path) {
+            try {
+                org.json.simple.parser.JSONParser parser = new org.json.simple.parser.JSONParser();
+                org.json.simple.JSONObject jsonConfiguration = (org.json.simple.JSONObject) parser.parse(new java.io.FileReader(path));
+                configuration = new JsonBase(jsonConfiguration);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to parse configuration file: "+path);
+            }
+        }
+        
+        public static JsonBase getConfiguration() {
+            return configuration;
+        }
+    }
+%>
