@@ -1,8 +1,8 @@
 var activityTable;
 jQuery(document).ready(function() {
     activityTable = new ActivityTable({
-        name: "activity",
-        container: "#activity",
+        name: "status",
+        container: "#status",
         configurationCallback: function(self, options) {
             options.aoColumns = [
                 {mData: null, sWidth: "25px",

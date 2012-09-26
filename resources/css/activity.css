@@ -38,49 +38,52 @@
 }
 
 /* Main table style properties */
-#tableContainer table#activity {
+#tableContainer table#status {
     margin: 10px 0;
 }
-#tableContainer table#activity thead th {
+#tableContainer table#status thead th {
     padding: 5px;
 }
-#tableContainer table#activity tbody tr {
+#tableContainer table#status tbody tr {
     height: 30px;
 }
-#tableContainer table#activity tbody tr.even {
+#tableContainer table#status tbody tr.even {
     background: #E0E0E0;
 }
-#tableContainer table#activity tbody tr.odd {
+#tableContainer table#status tbody tr.odd {
     background: #E9E9E9;
 }
-#tableContainer table#activity td.links a.minimize, a.maximize {
+#tableContainer table#status tbody tr td {
+    padding: 0;
+}
+#tableContainer table#status td.links a.minimize, a.maximize {
     font-size: 18px;
     font-family: monospace;
     font-weight: bold;
 }
-#tableContainer table#activity td.links {
+#tableContainer table#status td.links {
     text-align: center;
 }
-#tableContainer table#activity td.source {
+#tableContainer table#status td.source {
     color: #777777;
     font-weight: bold;
 }
 /* Child row style properties */
-#tableContainer table#activity tbody tr.child {
+#tableContainer table#status tbody tr.child {
     height: 0;
 }
-#tableContainer table#activity tbody tr.child .childContainer {
+#tableContainer table#status tbody tr.child .childContainer {
     display: none;
     padding: 0 0 10px 35px;
 }
 .childTable {
 }
-#tableContainer table#activity .childTable thead tr {
+#tableContainer table#status .childTable thead tr {
     height: 0;
 }
-#tableContainer table#activity .childTable thead tr th {
+#tableContainer table#status .childTable thead tr th {
     padding: 0 5px;
 }
-#tableContainer table#activity .childTable tbody tr {
+#tableContainer table#status .childTable tbody tr {
     background: #F6F6F6;
 }

@@ -41,7 +41,7 @@
                     <div id="overlay"></div>
                     <%@include file="interface/fragments/defaultControls.jspf"%>
                     <div id="tableContainer">
-                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="activity"></table>
+                        <table id="status"></table>
                     </div>
                 </div>
             </div>

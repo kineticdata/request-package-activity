@@ -1,5 +1,5 @@
 {
-    "activity": {
+    "status": {
         "columns": [
             "Id",
             "Status",
