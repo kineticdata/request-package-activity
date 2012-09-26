@@ -1,0 +1,23 @@
+/*
+ * This stylesheet contains any miscellaneous style properties used in the
+ * package.
+ *
+ * The overlayContainer and overlay properties are used to create a modal-style
+ * overlay.  Any elements within the overlayContainer element will be beneath
+ * the overlay element when it is not hidden.  This is used in this package to
+ * prevent the user from sending more than one ajax request at a time.  When an
+ * ajax call is going to be made the overlay is activated until a response which
+ * prevents a user from clicking on any more controls that send ajax requests.
+ */
+#overlayContainer {
+    position: relative;
+}
+#overlayContainer #overlay {
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}

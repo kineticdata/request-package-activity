@@ -1,3 +1,12 @@
+/*
+ * This stylesheet contains style properties that apply to the dialogs displayed
+ * when a user clicks on an id link in the table.  Note that there are two
+ * selectors for most of the style properties.  This is done because we are
+ * currently just calling the submission dialog from the submissions package  
+ * and not modifying it to use the same style classes as the dialogs in this
+ * package.  There are also a few style properties that only apply to the
+ * submission dialogs.
+ */
 .sourceDetails, .submissionDetails {
     background-color: #FFFFFF;
     padding: 5px;

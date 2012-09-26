@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/activity.css" type="text/css">
         <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/messages.css" type="text/css">
         <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/dialog.css" type="text/css">
+        <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/misc.css" type="text/css">
         <!-- Page Javascript -->
         <script type="text/javascript" src="<%=bundle.bundlePath()%>common/resources/js/date.format.js"></script>
         <script type="text/javascript" src="<%=bundle.bundlePath()%>common/resources/js/jquery.dataTables.js"></script>
@@ -36,7 +37,7 @@
                     <div class="message loading hidden"><span class="label">Loading </span><span class="content"></span><img src="<%= bundle.bundlePath()%>common/resources/images/spinner_00427E_FFFFFF.gif"></div>
                     <div class="message error hidden"><span class="label">Error: </span><span class="content"></span></div>
                 </div>
-                <div style="position:relative;">
+                <div id="overlayContainer">
                     <div id="overlay"></div>
                     <%@include file="interface/fragments/defaultControls.jspf"%>
                     <div id="tableContainer">
