@@ -36,15 +36,15 @@ jQuery(document).ready(function() {
         loadCompleteCallback: function(self) {
             jQuery("#messages .message.loading").hide();
             if (self.status === "success") {
-                if (jQuery(".tableControls .tableControl.sources .container input[type=checkbox]").length === 0) {
-                    var sources = jQuery(".tableControls .tableControl.sources .container");
+                if (jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").length === 0) {
+                    var sources = jQuery(".tableControls .tableControl.sources .sourcesCheckboxes");
                     jQuery.each(activityTable.sources, function(index, value) {
                         var input = jQuery('<div><input type="checkbox" value="' + value + '">' + value + '</option></div>');
                         jQuery(sources).append(input);
                     });
                 }
                 
-                jQuery(".tableControls .tableControl.sources .container input[type=checkbox]").each(function(index, element) {
+                jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").each(function(index, element) {
                     if (self.sources.indexOf(jQuery(element).val()) >= 0) {
                         jQuery(element).attr("checked", "checked");
                     } else {
@@ -81,12 +81,12 @@ jQuery(document).ready(function() {
         activityTable.refreshPage();
     });
     jQuery(".tableControls .tableControl.sources input.modify").click(function() {
-        jQuery(".tableControls .tableControl.sources #checkboxes").slideToggle();
+        jQuery(this).parents(".tableControl.sources").find(".sourcesSelector").slideToggle();
     });
     jQuery(".tableControls .tableControl.sources input.save").click(function() {
-        jQuery(".tableControls .tableControl.sources #checkboxes").slideUp();
+        jQuery(this).parents(".sourcesSelector").slideUp();
         activityTable.sources = [];
-        jQuery(".sources input[type=checkbox]:checked").each(function(index, element) {
+        jQuery(this).parents(".tableControl.sources").find(".sourcesCheckboxes input:checked").each(function(index, element) {
             activityTable.sources.push(jQuery(element).val());
         });
         activityTable.initialize();

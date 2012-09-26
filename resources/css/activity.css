@@ -1,4 +1,7 @@
-/* Table controls style properties */
+/*
+ * This stylesheet contains style properties that apply to the table and the
+ * controls for the table.
+ */
 .tableControls .tableControl {
     background-color: #A1A1A1;
     color: #FFFFFF;
@@ -12,26 +15,28 @@
     padding: 2px 5px;
     vertical-align: top;
 }
-.tableControl.sources {
+.tableControls .tableControl.pageSize, .tableControls .tableControl.sortOrder {
+    float: right;
+}
+.tableControls .tableControl.sources {
     position: relative;
 }
-.tableControl.sources #checkboxes {
+.tableControls .tableControl.sources .sourcesSelector {
     background-color: #A1A1A1;
     left: 0;
     position: absolute;
     top: 28px;
     width: 100%;
+    z-index: 1;
 }
-.tableControl.sources #checkboxes .container div {
+.tableControls .tableControl.sources .sourcesSelector .sourcesCheckboxes div {
     padding: 2px;
     white-space: nowrap;
 }
-.tableControl.sources #checkboxes .container input {
+.tableControls .tableControl.sources .sourcesSelector .sourcesCheckboxes div input {
     margin: 3px;
 }
-.tableControl.pageSize, .tableControl.sortOrder {
-    float: right;
-}
+
 /* Main table style properties */
 #tableContainer table#activity {
     margin: 10px 0;
