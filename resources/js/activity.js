@@ -5,27 +5,39 @@ jQuery(document).ready(function() {
         container: "#status",
         configurationCallback: function(self, options) {
             options.aoColumns = [
-                {mData: null, sWidth: "25px",
+                {mData: null,
                     fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
                         //if (oData["Has Children"] === "Has Children") {
                             childrenCellCallback(element, sData, oData, iRow, iColumn);
+                            jQuery(element).wrapInner('<div class="wrapper links">');
                         //}
-                    }
-                },
-                {mData: "Id", sTitle: "Id", sWidth: "125px",
+                    }},
+                {mData: "Id", sTitle: "Id",
                     fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
                         idCellCallback(element, sData, oData, iRow, iColumn);
-                    }
-                },
-                {mData: "Status", sTitle: "Status", sWidth: "100px"},
-                {mData: "Created At", sTitle: "Created At", sWidth: "150px",
-                    fnRender: function(o) {return formatDate(o.aData["Created At"]);}
-                },
-                {mData: "Description", sTitle: "Description", sWidth: "405px"},
-                {mData: "Source", sWidth: "75px",
+                        jQuery(element).wrapInner('<div class="wrapper id">');
+                    }},
+                {mData: "Status", sTitle: "Status",
+                    fnCreatedCell: function(element) {
+                        jQuery(element).wrapInner('<div class="wrapper status">');
+                    }},
+                {mData: "Created At", sTitle: "Created At",
+                    fnRender: function(o) {
+                        return formatDate(o.aData["Created At"]);
+                    },
+                    fnCreatedCell: function(element) {
+                        jQuery(element).wrapInner('<div class="wrapper createdAt">');
+                    }},
+                {mData: "Description", sTitle: "Description",
+                    fnCreatedCell: function(element) {
+                        jQuery(element).wrapInner('<div class="wrapper description">');
+                    }},
+                {mData: "Source",
                     fnRender: function(o) {return self.recordSources[o.iDataRow];},
-                    fnCreatedCell: function(element) {jQuery(element).addClass("source");}
-                }
+                    fnCreatedCell: function(element) {
+                        jQuery(element).addClass("source");
+                        jQuery(element).wrapInner('<div class="wrapper source">');
+                    }}
             ];
         },
         loadStartCallback: function(self) {
@@ -144,7 +156,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                 loadingImage.hide();
                 minAnchor.show();
                 var response = jQuery.parseJSON(data);
-                childRow = jQuery('<tr class="child"><td colspan="6"><div class="childContainer"><table class="childTable"></table></div></td></tr>');
+                childRow = jQuery('<tr class="childRow"><td colspan="6"><div class="childContainer"><table class="childTable"></table></div></td></tr>');
                 currentRow.after(childRow);
                 var dataTableOptions = {
                     bPaginate: false,
@@ -153,18 +165,34 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                     bInfo: false,
                     bAutoWidth: false,
                     aoColumns: [
-                        {mData: "Id", sWidth: "125px",
+                        {mData: null,
+                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
+                            jQuery(element).wrapInner('<div class="wrapper links">');
+                         }},
+                        {mData: "Id",
                          fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
                              idCellCallback(element, sData, oData, iRow, iColumn);
+                             jQuery(element).wrapInner('<div class="wrapper id">');
                          }},
-                        {mData: "Status", sWidth: "100px"},
-                        {mData: "Created At", sWidth: "150px",
-                         fnRender: function(o) {return formatDate(o.aData["Created At"]);}},
-                        {mData: "Description", sWidth: "405px"},
-                        {mData: "Source", sWidth: "75px",
+                        {mData: "Status",
+                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
+                             jQuery(element).wrapInner('<div class="wrapper status">');
+                         }},
+                        {mData: "Created At",
+                         fnRender: function(o) {return formatDate(o.aData["Created At"]);},
+                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
+                             jQuery(element).wrapInner('<div class="wrapper createdAt">');
+                         }},
+                        {mData: "Description",
+                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
+                             jQuery(element).wrapInner('<div class="wrapper description">');
+                         }},
+                        {mData: "Source",
                          fnRender: function(o) {return "Incident";},
-                         fnCreatedCell: function(element) {jQuery(element).addClass("source");}
-                        }
+                         fnCreatedCell: function(element) {
+                             jQuery(element).addClass("source");
+                             jQuery(element).wrapInner('<div class="wrapper source">');
+                         }}
                     ],
                     aaData: [
                         {"Source" : "Incident", "Status" : "Closed","Description":"User needs access to specific applications.","Instance Id":null,"Has Children":null,"Id":"INC_CAL_1000001","Created At":"2008-11-07T05:14:15+0000"},
