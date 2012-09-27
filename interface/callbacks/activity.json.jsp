@@ -1,4 +1,4 @@
-<%@page contentType="text/html; charset=UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" import="java.util.concurrent.*"%>
 <%@include file="../../framework/includes/packageInitialization.jspf"%>
 <%
     if (context == null) {
@@ -86,63 +86,37 @@
        /************************************************************************
         * BEGIN PROCESSING THE REQUEST
         ***********************************************************************/
-        // Make the bridge calls to retrieve data from each of the sources.
-        // More documentation regarding this process to come.
-        BridgeConnector connector = new KsrBridgeConnector(context, "KS00505696001C8HtgUA3iG5BgbqID");
-        Map<String, RecordList> sourceRecords = new java.util.HashMap<String, RecordList>();
-        Map<String, Integer> totals = new java.util.HashMap<String, Integer>();
-        for (String source : sources) {
-            JsonBase sourceConfig = activityConfig.getObject("sources").getObject(source);
-            String model = sourceConfig.getString("modelName");
-            String qualification = sourceConfig.getString("qualificationName");
-            
-            // Build parameters map
-            Map<String, String> parameters = new java.util.HashMap<String, String>();
-            List<String> parameterNames = sourceConfig.getStringArray("parameterNames");
-            for (String parameterName : parameterNames) {
-                if (parameterName.equals("Submitter")) {
-                    parameters.put("Submitter", context.getUserName());
-                } else if (parameterName.equals("Request Id")) {
-                    parameters.put("Request Id", request.getParameter("requestId"));
-                }
-            }
+        // Initialize the threadpool
+        ExecutorService threadpool = Executors.newFixedThreadPool(5);
 
-            // Build metadata
-            Map<String, String> metadata = new java.util.HashMap<String, String>();
-            // If a pageSize of zero is specified we will return all of the
-            // records that match the qualification.  This is done here simply
-            // by omitting the pageSize and offset from the bridge request
-            // metadata.
-            if (pageSize != 0) {
-                metadata.put("offset", String.valueOf(offsets.get(source)));
-                metadata.put("pageSize", String.valueOf(pageSize));
+               // Initialize a list of references to the thread workers
+        List<Future<Map<String,RecordList>>> workers = new ArrayList();
+
+        // Populate the threadpool
+        try {
+            String templateId = "KS00505696001C8HtgUA3iG5BgbqID";
+            // For each of the activity sources
+            for (String source : sources) {
+                // Initialize the worker object
+                SourceQuery worker = new SourceQuery(request, context, activityConfig,
+                        templateId, source, offsets, pageSize, sortOrder);
+                // Add the worker to the threadpool and have it start processing
+                workers.add(threadpool.submit(worker));
             }
-            // Build the sort string using the specified date/time attribute.
-            String dateTimeAttribute = sourceConfig.getString("dateTimeAttribute");
-            if (sortOrder.equals("ascending")) {
-                metadata.put("order", "<"+"%=attribute[\""+dateTimeAttribute+"\"]%"+">:ASC");
-            } else if (sortOrder.equals("descending")) {
-                metadata.put("order", "<"+"%=attribute[\""+dateTimeAttribute+"\"]%"+">:DESC");
+        } finally { threadpool.shutdown(); }
+
+        // Initialize a map of source records
+        Map<String, RecordList> sourceRecords = new java.util.HashMap<String, RecordList>();
+
+        // Retrieve the results from each of the threads
+        for (Future<Map<String,RecordList>> worker : workers) {
+            Map<String,RecordList> records = worker.get();
+            for (Map.Entry<String,RecordList> entry : records.entrySet()) {
+                sourceRecords.put(entry.getKey(), entry.getValue()); 
             }
-            
-            // Build attribute array
-            List<String> attributeList = new ArrayList<String>();
-            for (String columnName : activityConfig.getStringArray("columns")) {
-                String attributeName = sourceConfig.getObject("columnAttributeMappings").getString(columnName);
-                if (attributeName != null) {
-                    attributeList.add(attributeName);
-                }
-            }
-            String[] attributes = attributeList.toArray(new String[attributeList.size()]);
-            
-            Count count = connector.count(model, qualification, parameters);
-            totals.put(source, count.value());
-            RecordList recordList = connector.search(model, qualification, parameters, metadata, attributes);
-            sourceRecords.put(source, recordList);
         }
 
         // Here we build a sorted list of the resulting records.
-        // Build the simple date format
         SimpleDateFormat iso8601Format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+0000'");
         iso8601Format.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
         List<Record> sortedRecords = new ArrayList<Record>();
@@ -234,7 +208,8 @@
         
         org.json.simple.JSONArray totalArray = new org.json.simple.JSONArray();
         for (String source : sources) {
-            totalArray.add(totals.get(source));
+            RecordList records = sourceRecords.get(source);
+            totalArray.add(Integer.valueOf(records.meta("count")));
         }
 
         // Write to output stream

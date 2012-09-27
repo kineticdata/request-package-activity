@@ -32,6 +32,7 @@
 --%>
 <%@include file="../helpers/PackageHelper.jspf" %>
 <%@include file="../helpers/ConfigurationHelper.jspf" %>
+<%@include file="../helpers/SourceQuery.jspf" %>
 <%@include file="../../../../common/framework/helpers/PathHelper.jspf" %>
 
 <%--

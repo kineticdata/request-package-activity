@@ -1,0 +1,100 @@
+<%@page import="java.util.*,java.util.concurrent.*,com.kineticdata.bridges.RecordList" %>
+<%!
+    // Define a new thread worker
+    private static class SourceQuery implements Callable<Map<String,RecordList>> {
+        // List of private variables
+        private HttpServletRequest request;
+        private HelperContext context;
+        private JsonBase activityConfig;
+        private String templateId;
+        private String source;
+        private Map<String,Integer> offsets;
+        private int pageSize;
+        private String sortOrder;
+
+        // Constructor
+        public SourceQuery(
+            HttpServletRequest request,
+            HelperContext context, 
+            JsonBase activityConfig, 
+            String templateId,
+            String source,
+            Map<String,Integer> offsets,
+            int pageSize,
+            String sortOrder
+        ) {
+            // Store each of the arguments as a private variable
+            this.request = request;
+            this.context = context;
+            this.activityConfig = activityConfig;
+            this.templateId = templateId;
+            this.source = source;
+            this.offsets = offsets;
+            this.pageSize = pageSize;
+            this.sortOrder = sortOrder;
+        }
+
+        // Implement call
+        public Map<String,RecordList> call() throws Exception {
+            // Initialize the results
+            Map<String,RecordList> results = new java.util.LinkedHashMap();
+            
+            // Initialize the bridge connector
+            BridgeConnector connector = new KsrBridgeConnector(context, templateId);
+
+            // Obtain a reference to the sourceConfig
+            JsonBase sourceConfig = activityConfig.getObject("sources").getObject(source);
+            
+            // Obtain the bridge model information
+            String model = sourceConfig.getString("modelName");
+            String qualification = sourceConfig.getString("qualificationName");
+            
+            // Build parameters map
+            Map<String, String> parameters = new java.util.HashMap<String, String>();
+            List<String> parameterNames = sourceConfig.getStringArray("parameterNames");
+            for (String parameterName : parameterNames) {
+                if (parameterName.equals("Submitter")) {
+                    parameters.put("Submitter", context.getUserName());
+                } else if (parameterName.equals("Request Id")) {
+                    parameters.put("Request Id", request.getParameter("requestId"));
+                }
+            }
+
+            // Build metadata
+            Map<String, String> metadata = new java.util.HashMap<String, String>();
+            // If a pageSize of zero is specified we will return all of the
+            // records that match the qualification.  This is done here simply
+            // by omitting the pageSize and offset from the bridge request
+            // metadata.
+            if (pageSize != 0) {
+                metadata.put("offset", String.valueOf(offsets.get(source)));
+                metadata.put("pageSize", String.valueOf(pageSize));
+            }
+            // Build the sort string using the specified date/time attribute.
+            String dateTimeAttribute = sourceConfig.getString("dateTimeAttribute");
+            if (sortOrder.equals("ascending")) {
+                metadata.put("order", "<"+"%=attribute[\""+dateTimeAttribute+"\"]%"+">:ASC");
+            } else if (sortOrder.equals("descending")) {
+                metadata.put("order", "<"+"%=attribute[\""+dateTimeAttribute+"\"]%"+">:DESC");
+            }
+            
+            // Build attribute array
+            List<String> attributeList = new ArrayList<String>();
+            for (String columnName : activityConfig.getStringArray("columns")) {
+                String attributeName = sourceConfig.getObject("columnAttributeMappings").getString(columnName);
+                if (attributeName != null) {
+                    attributeList.add(attributeName);
+                }
+            }
+            String[] attributes = attributeList.toArray(new String[attributeList.size()]);
+            
+            // Retrieve the records
+            RecordList records = connector.search(model, qualification, parameters, metadata, attributes);
+            // Add the records to the results map
+            results.put(source, records);
+
+            // Return the results
+            return results;
+        }
+    }
+%>
