@@ -109,13 +109,15 @@
 
             // Build metadata
             Map<String, String> metadata = new java.util.HashMap<String, String>();
-            // Added this condition for the child records call and page size zero
-            // feature.  If a pageSize of zero is specified we simple will return
-            // all records that match the qualification.
+            // If a pageSize of zero is specified we will return all of the
+            // records that match the qualification.  This is done here simply
+            // by omitting the pageSize and offset from the bridge request
+            // metadata.
             if (pageSize != 0) {
                 metadata.put("offset", String.valueOf(offsets.get(source)));
                 metadata.put("pageSize", String.valueOf(pageSize));
             }
+            // Build the sort string using the specified date/time attribute.
             String dateTimeAttribute = sourceConfig.getString("dateTimeAttribute");
             if (sortOrder.equals("ascending")) {
                 metadata.put("order", "<"+"%=attribute[\""+dateTimeAttribute+"\"]%"+">:ASC");
@@ -185,8 +187,7 @@
             selectedRecords.add(record);
             selectedRecordSources.add(source);
         }
-        // Added this piece of code for the child records call and page size zero
-        // feature.
+        // If the page size is set to zero we simply return all of the records.
         if (pageSize == 0) {
             selectedRecords = sortedRecords;
             selectedRecordSources = sortedRecordSources;
