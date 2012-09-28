@@ -19,8 +19,8 @@
         <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/dialog.css" type="text/css">
         <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/misc.css" type="text/css">
         <!-- Page Javascript -->
-        <script type="text/javascript" src="<%=bundle.bundlePath()%>common/resources/js/date.format.js"></script>
-        <script type="text/javascript" src="<%=bundle.bundlePath()%>common/resources/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/date.format.js"></script>
+        <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/activityTable.js"></script>
         <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/activity.js"></script>
         <script type="text/javascript">
