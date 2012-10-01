@@ -136,7 +136,8 @@
             for (String source : sources) {
                 Record record = sourceRecords.get(source).first();
                 if (record != null) {
-                    Date date = iso8601Format.parse(record.get("Created At"));
+                    String dateTimeAttribute = activityConfig.getObject("sources").getObject(source).getString("dateTimeAttribute");
+                    Date date = iso8601Format.parse(record.get(dateTimeAttribute));
                     if ((topSource == null) || 
                         (sortOrder.equals("ascending") && date.before(topDate)) || 
                         (sortOrder.equals("descending") && date.after(topDate))) {
