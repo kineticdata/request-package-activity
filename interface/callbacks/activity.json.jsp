@@ -26,7 +26,7 @@
             sources = keys.toArray(new String[keys.size()]);
         } else {
             sources = request.getParameter("sources").split(",");
-            if (sources.length == 0) {
+            if (sources.length == 0 || "".equals(sourcesParam)) {
                 throw new RuntimeException("The sources parameter cannot have a length of zero.");
             }
             for (String source : sources) {
