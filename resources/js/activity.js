@@ -146,7 +146,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
         maxAnchor.hide();
         loadingImage.show();
         BUNDLE.ajax({
-            url: "/kinetic/themes/edge/packages/activity/interface/callbacks/activity.json.jsp",
+            url: BUNDLE.packagePath + "interface/callbacks/activity.json.jsp",
             data: {
                 name: "children",
                 requestId: oData["Id"],

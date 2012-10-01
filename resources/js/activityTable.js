@@ -82,7 +82,7 @@ ActivityTable.prototype.doRequest = function(offsets, callback) {
     if (this.sortOrder !== undefined) {data["sortOrder"] = this.sortOrder;}
     if (offsets) {data["offsets"] = offsets.join(",");}
     jQuery.ajax({
-        url: "/kinetic/themes/edge/packages/activity/interface/callbacks/activity.json.jsp",
+        url: BUNDLE.packagePath + "interface/callbacks/activity.json.jsp",
         data: data,
         success: __bind(function(data) {
             // Parse the response object.
