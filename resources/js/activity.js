@@ -5,10 +5,10 @@ var activityTable;
 // Here we define the configuration for the columns of the table that will
 // displayed.  This is done here for two reasons: it cleans up the
 // instantiation of the activity table as well as it is required twice for
-// this implementation of the activity console.  Note that for each column
+// this implementation of the activity console.  Note that for each column,
 // after the cell is created we wrap its contents with a div that gives us
 // more styling leverage over the element.  Some of the columns also
-// required formatting of the data before it is rendered (for example we
+// require formatting of the data before it is rendered (for example we
 // format the date of the created at column).
 var columnConfig = [
     // Create a column that acts as a table control but does not represent
@@ -115,7 +115,7 @@ jQuery(document).ready(function() {
                 // Generate a success message that contains some information
                 // about how many and which records are being viewed out of the
                 // total.  These values are calculated using metadata of the
-                // response.  The results are used in the success message.
+                // response.
                 var offset = 0;
                 jQuery.each(self.stack[self.stack.length-1], function(index, number) { offset += number; });
                 var count = 0;
@@ -190,9 +190,10 @@ function idCellCallback(element, sData, oData, iRow, iColumn) {
 // maximize/minimize links and binds events to each.  When the maximize link is
 // clicked we make a call to the activity.json.jsp to retrieve child data.  A
 // row is then added below the current one and the new data is presented using
-// a slide down animation.  Also the maximize link is then hidden.  When the
-// minimize link is clicked the child data row is hidden using a slide up
-// animation and the minmize link is hidden.
+// a slide down animation.  Also the maximize link is then hidden and a minimize
+// link will be shown.  When the minimize link is clicked the child data row is
+// hidden using a slide up animation and the minimize link is hidden and the
+// maximize link is redisplayed.
 function childrenCellCallback(element, sData, oData, iRow, iColumn) {
     jQuery(element).empty();
     var minAnchor = jQuery('<a class="minimize hidden" href="javascript:void(0)">-</a>');
