@@ -3,6 +3,7 @@ jQuery(document).ready(function() {
     activityTable = new ActivityTable({
         name: "status",
         container: "#status",
+        templateId: BUNDLE.config.templateId,
         configurationCallback: function(self, options) {
             options.aoColumns = [
                 {mData: null,
@@ -150,6 +151,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
             data: {
                 name: "children",
                 requestId: oData["Id"],
+                templateId: BUNDLE.config.templateId,
                 pageSize: 0
             },
             success: function(data) {
@@ -225,7 +227,10 @@ function getRequestDialog(submissionInstanceId) {
 function getChangeDialog(changeId) {
     BUNDLE.ajax({
         url: BUNDLE.packagePath + "interface/callbacks/changeDialog.html.jsp",
-        data: {id: changeId},
+        data: {
+            id: changeId,
+            templateId: BUNDLE.config.templateId
+        },
         success: function(data) {
             createDialog(data);
         }
@@ -234,7 +239,10 @@ function getChangeDialog(changeId) {
 function getIncidentDialog(incidentId) {
     BUNDLE.ajax({
         url: BUNDLE.packagePath + "interface/callbacks/incidentDialog.html.jsp",
-        data: {id: incidentId},
+        data: {
+            id: incidentId,
+            templateId: BUNDLE.config.templateId
+        },
         success: function(data) {
             createDialog(data);
         }
@@ -243,7 +251,11 @@ function getIncidentDialog(incidentId) {
 function getWorkOrderDialog(workOrderId) {
     BUNDLE.ajax({
         url: BUNDLE.packagePath + "interface/callbacks/workOrderDialog.html.jsp",
-        data: {id: workOrderId},
+        data: {
+            id: workOrderId,
+            templateId: BUNDLE.config.templateId
+
+        },
         success: function(data) {
             createDialog(data);
         }

@@ -5,7 +5,8 @@
         ResponseHelper.sendUnauthorizedResponse(response);
     } else {
         String id = request.getParameter("id");
-        BridgeConnector connector = new KsrBridgeConnector(context, "KS00505696001C8HtgUA3iG5BgbqID");
+        String templateId = request.getParameter("templateId");
+        BridgeConnector connector = new KsrBridgeConnector(context, templateId);
         Map<String, String> parameters = new java.util.HashMap<String, String>();
         parameters.put("Submitter", context.getUserName());
         parameters.put("Change Id", id);

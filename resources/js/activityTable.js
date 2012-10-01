@@ -12,7 +12,8 @@ var __bind = function(fn, me) {
 /*
  * Constructor for the ActivityTable "class".
  * Valid options are as follows:
- * 
+ * name
+ * templateId
  * container - This is a css style selector that represents the table that will
  *             be populated.
  * configurationCallback - This is a function that will be called after the
@@ -63,6 +64,7 @@ var __bind = function(fn, me) {
  */
 function ActivityTable(options) {
     this.name = options["name"];
+    this.templateId = options["templateId"];
     this.container = options["container"];
     this.configurationCallback = options["configurationCallback"];
     this.loadStartCallback = options["loadStartCallback"];
@@ -76,7 +78,10 @@ function ActivityTable(options) {
 // the caller for more specific processing of the response.
 ActivityTable.prototype.doRequest = function(offsets, callback) {
     if (this.loadStartCallback) {this.loadStartCallback(this);}
-    data = {name: this.name};
+    data = {
+        name: this.name,
+        templateId: this.templateId
+    };
     if (this.sources !== undefined) {data["sources"] = this.sources.join(",");}
     if (this.pageSize !== undefined) {data["pageSize"] = this.pageSize;}
     if (this.sortOrder !== undefined) {data["sortOrder"] = this.sortOrder;}

@@ -1,0 +1,6 @@
+<%-- Set the values of the packages configurable settings. --%>
+<%
+    // Store the template id of the portal page so that it can be passed to ajax
+    // requests.
+    bundle.setProperty("templateId", customerRequest.getTemplateId());
+%>

@@ -83,6 +83,15 @@
             throw new RuntimeException("The sortOrder parameter specified '" + sortOrder + "' is invalid");
         }
 
+        // Handle the templateId parameter.  This parameter is required to make
+        // the bridged requests.  It is simply passed through to the method that
+        // makes those calls.  If this parameter is not specified we raise an
+        // exception.
+        String templateId = request.getParameter("templateId");
+        if (templateId == null) {
+            throw new RuntimeException("The required templateId parameter was not specified");
+        }
+
        /************************************************************************
         * BEGIN PROCESSING THE REQUEST
         ***********************************************************************/
@@ -94,7 +103,6 @@
 
         // Populate the threadpool
         try {
-            String templateId = "KS00505696001C8HtgUA3iG5BgbqID";
             // For each of the activity sources
             for (String source : sources) {
                 // Initialize the worker object
