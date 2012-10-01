@@ -164,6 +164,10 @@ jQuery(document).ready(function() {
     });
 });
 
+// This function is a callback handler for the cells that represent record ids.
+// It replaces the standard text with a link that contains the record id.  Also
+// a javascript click event is bound to each link.  When clicked another
+// function will be called depending on the source of record.
 function idCellCallback(element, sData, oData, iRow, iColumn) {
     jQuery(element).empty();
     var anchorElement = jQuery('<a href="javascript:void(0)">'+oData["Id"]+'</a>');
@@ -181,6 +185,14 @@ function idCellCallback(element, sData, oData, iRow, iColumn) {
     });
 }
 
+// This function is a callback handler for the cells that contain child data
+// controls (maximize/minimize).  It replaces the standard text with the
+// maximize/minimize links and binds events to each.  When the maximize link is
+// clicked we make a call to the activity.json.jsp to retrieve child data.  A
+// row is then added below the current one and the new data is presented using
+// a slide down animation.  Also the maximize link is then hidden.  When the
+// minimize link is clicked the child data row is hidden using a slide up
+// animation and the minmize link is hidden.
 function childrenCellCallback(element, sData, oData, iRow, iColumn) {
     jQuery(element).empty();
     var minAnchor = jQuery('<a class="minimize hidden" href="javascript:void(0)">-</a>');
@@ -235,6 +247,8 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
         });
     });
 }
+
+
 function getRequestDialog(submissionInstanceId) {
     BUNDLE.ajax({
         url: BUNDLE.bundlePath + "packages/submissions/interface/callbacks/submissionDetails.html.jsp",
