@@ -102,7 +102,7 @@ jQuery(document).ready(function() {
                 // Here we set the value of each checkbox in the sources control
                 // to reflect the sources in the metadata of the response.
                 jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").each(function(index, element) {
-                    if (self.sources.indexOf(jQuery(element).val()) >= 0) {
+                    if (arrayContains(self.sources, jQuery(element).val())) {
                         jQuery(element).attr("checked", "checked");
                     } else {
                         jQuery(element).attr("checked", null);
@@ -327,4 +327,16 @@ function formatDate(dateString) {
     } else {
         return date.format("isoDateTime");
     }
+}
+
+/*
+ * This function takes an array and a value.  It returns true if the value
+ * exists within the array otherwise it returns false.  This is useful because
+ * the other way of checking this (the indexOf method) is not supported by IE7.
+ */
+function arrayContains(array, value) {
+    for (var i=0; i<array.length; i++) {
+        if (array[i] === value) { return true; }
+    }
+    return false;
 }
