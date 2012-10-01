@@ -98,7 +98,7 @@
         // Initialize the threadpool
         ExecutorService threadpool = Executors.newFixedThreadPool(5);
 
-               // Initialize a list of references to the thread workers
+        // Initialize a list of references to the thread workers
         List<Future<Map<String,RecordList>>> workers = new ArrayList();
 
         // Populate the threadpool
