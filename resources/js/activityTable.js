@@ -12,8 +12,11 @@ var __bind = function(fn, me) {
 /*
  * Constructor for the ActivityTable "class".
  * Valid options are as follows:
- * name
- * templateId
+ * name - This is a required configuration param that specifies which
+ *        configuration in the config json should be used for this activity
+ *        table instance.
+ * templateId - This is a required configuration param that stores the template
+ *              id of the portal page so that bridged requests can be made.
  * container - This is a css style selector that represents the table that will
  *             be populated.
  * configurationCallback - This is a function that will be called after the
@@ -59,8 +62,9 @@ var __bind = function(fn, me) {
  *          The items below the top of the stack represnt offsets for
  *          previous pages.  Offset arrays are pushed to the stack when a
  *          next page is retrieved.
- *  status
- *  statusText
+ *  status - A string that represents the response status from the ajax request.
+ *  statusText - A string that represents the response status message from the
+ *               ajax request.
  */
 function ActivityTable(options) {
     this.name = options["name"];
