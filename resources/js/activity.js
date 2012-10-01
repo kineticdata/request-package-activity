@@ -1,54 +1,97 @@
+// Declare the activityTable variable that will point to the activity table
+// instance in the global scope.
 var activityTable;
+
+// Here we define the configuration for the columns of the table that will
+// displayed.  This is done here for two reasons: it cleans up the
+// instantiation of the activity table as well as it is required twice for
+// this implementation of the activity console.  Note that for each column
+// after the cell is created we wrap its contents with a div that gives us
+// more styling leverage over the element.  Some of the columns also
+// required formatting of the data before it is rendered (for example we
+// format the date of the created at column).
+var columnConfig = [
+    // Create a column that acts as a table control but does not represent
+    // any data.  This column will show maximize/minimize controls if the
+    // record contains related child records.  This cell callback has been
+    // put in another method named childrenCellCallback (see below) for
+    // cleanliness.
+    {mData: null,
+        fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
+            //if (oData["Has Children"] === "Has Children") {
+                childrenCellCallback(element, sData, oData, iRow, iColumn);
+                jQuery(element).wrapInner('<div class="wrapper links">');
+            //}
+        }},
+    // For the Id column we replace the text content with a link that has a
+    // javascript click event bound to it.  This cell callback has been put
+    // in another method named idCellCallback (see below) for cleanliness.
+    {mData: "Id", sTitle: "Id",
+        fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
+            idCellCallback(element, sData, oData, iRow, iColumn);
+            jQuery(element).wrapInner('<div class="wrapper id">');
+        }},
+    {mData: "Status", sTitle: "Status",
+        fnCreatedCell: function(element) {
+            jQuery(element).wrapInner('<div class="wrapper status">');
+        }},
+    // For the Created At column we use the formatDate function to convert
+    // the date to a more user-friendly format.
+    {mData: "Created At", sTitle: "Created At",
+        fnRender: function(o) {
+            return formatDate(o.aData["Created At"]);
+        },
+        fnCreatedCell: function(element) {
+            jQuery(element).wrapInner('<div class="wrapper createdAt">');
+        }},
+    {mData: "Description", sTitle: "Description",
+        fnCreatedCell: function(element) {
+            jQuery(element).wrapInner('<div class="wrapper description">');
+        }},
+    // For the Source column, there is initially no data, but we get the
+    // source by using the recordSources array returned within the activity
+    // table to determine which source this row belongs to.
+    {mData: "Source",
+        fnRender: function(o) {return activityTable.recordSources[o.iDataRow];},
+        fnCreatedCell: function(element) {
+            jQuery(element).addClass("source");
+            jQuery(element).wrapInner('<div class="wrapper source">');
+        }}
+];
+
+
 jQuery(document).ready(function() {
+    // Here we instantiate the main activity table of the page.  This invovles
+    // passing in a few configuration parameters as well as defining some
+    // callback handlers that are called when requests are sent and responded to
+    // as well as one for configuration of the underlying datatable.
     activityTable = new ActivityTable({
         name: "status",
         container: "#status",
         templateId: BUNDLE.config.templateId,
+        // Use the column configuration defined above.
         configurationCallback: function(self, options) {
-            options.aoColumns = [
-                {mData: null,
-                    fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                        //if (oData["Has Children"] === "Has Children") {
-                            childrenCellCallback(element, sData, oData, iRow, iColumn);
-                            jQuery(element).wrapInner('<div class="wrapper links">');
-                        //}
-                    }},
-                {mData: "Id", sTitle: "Id",
-                    fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                        idCellCallback(element, sData, oData, iRow, iColumn);
-                        jQuery(element).wrapInner('<div class="wrapper id">');
-                    }},
-                {mData: "Status", sTitle: "Status",
-                    fnCreatedCell: function(element) {
-                        jQuery(element).wrapInner('<div class="wrapper status">');
-                    }},
-                {mData: "Created At", sTitle: "Created At",
-                    fnRender: function(o) {
-                        return formatDate(o.aData["Created At"]);
-                    },
-                    fnCreatedCell: function(element) {
-                        jQuery(element).wrapInner('<div class="wrapper createdAt">');
-                    }},
-                {mData: "Description", sTitle: "Description",
-                    fnCreatedCell: function(element) {
-                        jQuery(element).wrapInner('<div class="wrapper description">');
-                    }},
-                {mData: "Source",
-                    fnRender: function(o) {return self.recordSources[o.iDataRow];},
-                    fnCreatedCell: function(element) {
-                        jQuery(element).addClass("source");
-                        jQuery(element).wrapInner('<div class="wrapper source">');
-                    }}
-            ];
+            options.aoColumns = columnConfig;
         },
+        // Add a modal overlay that prevents users from clicking on other
+        // controls.  Also hide any current messages and display the loading
+        // message.
         loadStartCallback: function(self) {
             jQuery("#overlay").show();
             jQuery("#messages .message").hide();
             jQuery("#messages .message.loading").show();
         },
+        // Remove the modal overlay.  If the request returned successfully we
+        // update each of the controls with metadata from the call.  We also
+        // hide the loading message and display a success message.  If the
+        // request returned with an error we will display an error message.
         loadCompleteCallback: function(self) {
             jQuery("#messages .message.loading").hide();
             if (self.status === "success") {
+                // If this is the first time the table has been loaded we will
+                // generate a checkbox for each source in the sources control.
+                // We assume that it is the first time loaded when there are no
+                // source checkboxes already existing.
                 if (jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").length === 0) {
                     var sources = jQuery(".tableControls .tableControl.sources .sourcesCheckboxes");
                     jQuery.each(activityTable.sources, function(index, value) {
@@ -56,7 +99,8 @@ jQuery(document).ready(function() {
                         jQuery(sources).append(input);
                     });
                 }
-                
+                // Here we set the value of each checkbox in the sources control
+                // to reflect the sources in the metadata of the response.
                 jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").each(function(index, element) {
                     if (self.sources.indexOf(jQuery(element).val()) >= 0) {
                         jQuery(element).attr("checked", "checked");
@@ -64,9 +108,14 @@ jQuery(document).ready(function() {
                         jQuery(element).attr("checked", null);
                     }
                 });
+                // Update the other controls to reflect the metadata of the
+                // response.
                 jQuery(".tableControls .tableControl.sortOrder select").val(activityTable.sortOrder);
                 jQuery(".tableControls .tableControl.pageSize select").val(activityTable.pageSize);
-                
+                // Generate a success message that contains some information
+                // about how many and which records are being viewed out of the
+                // total.  These values are calculated using metadata of the
+                // response.  The results are used in the success message.
                 var offset = 0;
                 jQuery.each(self.stack[self.stack.length-1], function(index, number) { offset += number; });
                 var count = 0;
@@ -84,6 +133,7 @@ jQuery(document).ready(function() {
     });
     activityTable.initialize();
     
+    // Here we bind functions to the table controls.
     jQuery(".tableControls .tableControl.nextPage").click(function() {
         activityTable.nextPage();
     });
@@ -104,7 +154,6 @@ jQuery(document).ready(function() {
         });
         activityTable.initialize();
     });
-    
     jQuery(".tableControls .tableControl.sortOrder select").change(function() {
         activityTable.sortOrder = jQuery(this).val();
         activityTable.initialize();
@@ -166,36 +215,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                     bSort: false,
                     bInfo: false,
                     bAutoWidth: false,
-                    aoColumns: [
-                        {mData: null,
-                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                            jQuery(element).wrapInner('<div class="wrapper links">');
-                         }},
-                        {mData: "Id",
-                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                             idCellCallback(element, sData, oData, iRow, iColumn);
-                             jQuery(element).wrapInner('<div class="wrapper id">');
-                         }},
-                        {mData: "Status",
-                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                             jQuery(element).wrapInner('<div class="wrapper status">');
-                         }},
-                        {mData: "Created At",
-                         fnRender: function(o) {return formatDate(o.aData["Created At"]);},
-                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                             jQuery(element).wrapInner('<div class="wrapper createdAt">');
-                         }},
-                        {mData: "Description",
-                         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-                             jQuery(element).wrapInner('<div class="wrapper description">');
-                         }},
-                        {mData: "Source",
-                         fnRender: function(o) {return "Incident";},
-                         fnCreatedCell: function(element) {
-                             jQuery(element).addClass("source");
-                             jQuery(element).wrapInner('<div class="wrapper source">');
-                         }}
-                    ],
+                    aoColumns: columnConfig,
                     aaData: [
                         {"Source" : "Incident", "Status" : "Closed","Description":"User needs access to specific applications.","Instance Id":null,"Has Children":null,"Id":"INC_CAL_1000001","Created At":"2008-11-07T05:14:15+0000"},
                         {"Source" : "Incident", "Status" : "Closed","Description":"User needs access to specific applications.","Instance Id":null,"Has Children":null,"Id":"INC_CAL_1000001","Created At":"2008-11-07T05:14:15+0000"}
@@ -274,6 +294,11 @@ function createDialog(content) {
     $(element).parent().append('<div class="kd-shadow"></div>');
 }
 
+/*
+ * This function takes a ISO8601 date string (the exact format expected from a
+ * bridge request) and converts it to a more user-friendly format.  It looks at
+ * a BUNDLE.config.locale value to determine which date format mask to use.
+ */
 function formatDate(dateString) {
     var match = dateString.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\+0000/);
     if (match === null) {
