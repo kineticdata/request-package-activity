@@ -67,10 +67,10 @@
         // we default it to 15.  If one is specified we convert it to an int
         // variable.
         String pageSizeParam = request.getParameter("pageSize");
-        Integer pageSize;
-        if (pageSizeParam == null && !pageSizeParam.equals("all")) {
+        Integer pageSize = null;
+        if (pageSizeParam == null) {
             pageSize = new Integer(15);
-        } else {
+        } else if (!pageSizeParam.equals("all")){
             pageSize = Integer.parseInt(pageSizeParam);
         }
 

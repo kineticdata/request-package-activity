@@ -214,7 +214,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                 name: "children",
                 requestId: oData["Id"],
                 templateId: BUNDLE.config.templateId,
-                pageSize: 0
+                pageSize: "all"
             },
             success: function(data) {
                 loadingImage.hide();
