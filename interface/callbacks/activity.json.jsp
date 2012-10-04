@@ -107,7 +107,7 @@
             // For each of the activity sources
             for (String source : sources) {
                 // Initialize the worker object
-                SourceQuery worker = new SourceQuery(request, context, activityConfig,
+                SourceQuery worker = new SourceQuery(context, activityConfig, parameterConfig,
                         templateId, source, offsets, pageSize, sortOrder);
                 // Add the worker to the threadpool and have it start processing
                 workers.put(source, threadpool.submit(worker));
@@ -129,6 +129,7 @@
                     sourceStatuses.put(source, "success");
                 }
             } catch (Exception e) {
+                System.out.println(e);
                 sourceStatuses.put(source, "error");
             }
         }

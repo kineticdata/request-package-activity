@@ -32,6 +32,7 @@
 --%>
 <%@include file="../helpers/PackageHelper.jspf" %>
 <%@include file="../helpers/ConfigurationHelper.jspf" %>
+<%@include file="../helpers/ParameterConfig.jspf" %>
 <%@include file="../helpers/SourceQuery.jspf" %>
 <%@include file="../../../../common/framework/helpers/PathHelper.jspf" %>
 
@@ -61,6 +62,11 @@
     Include the package configuration file.
 --%>
 <%@include file="../../config/config.jspf" %>
+
+<%--
+    Load the ParameterConfig object.
+--%>
+ <% ParameterConfig parameterConfig = new ParameterConfig(request, context, bundle); %>
 
 <%--
     Use the configuration helper to load the JSON configuration file that

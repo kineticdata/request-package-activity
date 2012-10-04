@@ -3,9 +3,9 @@
     // Define a new thread worker
     private static class SourceQuery implements Callable<Map<String,RecordList>> {
         // List of private variables
-        private HttpServletRequest request;
         private HelperContext context;
         private JsonBase activityConfig;
+        private ParameterConfig parameterConfig;
         private String templateId;
         private String source;
         private Map<String,Integer> offsets;
@@ -14,9 +14,9 @@
 
         // Constructor
         public SourceQuery(
-            HttpServletRequest request,
-            HelperContext context, 
+            HelperContext context,
             JsonBase activityConfig, 
+            ParameterConfig parameterConfig,
             String templateId,
             String source,
             Map<String,Integer> offsets,
@@ -24,9 +24,9 @@
             String sortOrder
         ) {
             // Store each of the arguments as a private variable
-            this.request = request;
             this.context = context;
             this.activityConfig = activityConfig;
+            this.parameterConfig = parameterConfig;
             this.templateId = templateId;
             this.source = source;
             this.offsets = offsets;
@@ -53,11 +53,7 @@
             Map<String, String> parameters = new java.util.HashMap<String, String>();
             List<String> parameterNames = sourceConfig.getStringArray("parameterNames");
             for (String parameterName : parameterNames) {
-                if (parameterName.equals("Submitter")) {
-                    parameters.put("Submitter", context.getUserName());
-                } else if (parameterName.equals("Request Id")) {
-                    parameters.put("Request Id", request.getParameter("requestId"));
-                }
+                parameters.put(parameterName, parameterConfig.get(model, parameterName));
             }
 
             // Build metadata

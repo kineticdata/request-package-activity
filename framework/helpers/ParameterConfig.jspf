@@ -1,0 +1,37 @@
+<%!
+    public static class ParameterConfig {
+        private static HttpServletRequest request;
+        private static HelperContext context;
+        private static Bundle bundle;
+        
+        public ParameterConfig(HttpServletRequest request, HelperContext context, Bundle bundle) {
+            this.request = request;
+            this.context = context;
+            this.bundle = bundle;
+        }
+        
+        public String get(String model, String parameter) {
+            if ("Activity Request".equals(model)) {}
+            if ("Activity Incident".equals(model)) {
+                if ("Request Id".equals(parameter)) {
+                    return request.getParameter("requestId");
+                }
+            }
+            if ("Activity Work Order".equals(model)) {
+                if ("Request Id".equals(parameter)) {
+                    return request.getParameter("requestId");
+                }
+            }
+            if ("Activity Change".equals(model)) {
+                if ("Request Id".equals(parameter)) {
+                    return request.getParameter("requestId");
+                }
+            }
+            // DEFAULT
+            if ("Submitter".equals(parameter)) {
+                return context.getUserName();
+            }
+            return null;
+        }
+    }
+%>
