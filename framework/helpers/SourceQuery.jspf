@@ -9,7 +9,7 @@
         private String templateId;
         private String source;
         private Map<String,Integer> offsets;
-        private int pageSize;
+        private Integer pageSize;
         private String sortOrder;
 
         // Constructor
@@ -20,7 +20,7 @@
             String templateId,
             String source,
             Map<String,Integer> offsets,
-            int pageSize,
+            Integer pageSize,
             String sortOrder
         ) {
             // Store each of the arguments as a private variable
@@ -62,11 +62,11 @@
 
             // Build metadata
             Map<String, String> metadata = new java.util.HashMap<String, String>();
-            // If a pageSize of zero is specified we will return all of the
+            // If the pageSize parameter is null we will return all of the
             // records that match the qualification.  This is done here simply
             // by omitting the pageSize and offset from the bridge request
             // metadata.
-            if (pageSize != 0) {
+            if (pageSize != null) {
                 metadata.put("offset", String.valueOf(offsets.get(source)));
                 metadata.put("pageSize", String.valueOf(pageSize));
             }

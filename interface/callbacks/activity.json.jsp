@@ -1,3 +1,4 @@
+<%@page import="com.kd.kineticSurvey.impl.SurveyLogger"%>
 <%@page contentType="text/html; charset=UTF-8" import="java.util.concurrent.*"%>
 <%@include file="../../framework/includes/packageInitialization.jspf"%>
 <%
@@ -66,9 +67,9 @@
         // we default it to 15.  If one is specified we convert it to an int
         // variable.
         String pageSizeParam = request.getParameter("pageSize");
-        int pageSize;
-        if (pageSizeParam == null) {
-            pageSize = 15;
+        Integer pageSize;
+        if (pageSizeParam == null && !pageSizeParam.equals("all")) {
+            pageSize = new Integer(15);
         } else {
             pageSize = Integer.parseInt(pageSizeParam);
         }
@@ -99,7 +100,7 @@
         ExecutorService threadpool = Executors.newFixedThreadPool(5);
 
         // Initialize a list of references to the thread workers
-        List<Future<Map<String,RecordList>>> workers = new ArrayList();
+        Map<String,Future<Map<String,RecordList>>> workers = new java.util.LinkedHashMap();
 
         // Populate the threadpool
         try {
@@ -109,31 +110,44 @@
                 SourceQuery worker = new SourceQuery(request, context, activityConfig,
                         templateId, source, offsets, pageSize, sortOrder);
                 // Add the worker to the threadpool and have it start processing
-                workers.add(threadpool.submit(worker));
+                workers.put(source, threadpool.submit(worker));
             }
         } finally { threadpool.shutdown(); }
 
         // Initialize a map of source records
         Map<String, RecordList> sourceRecords = new java.util.HashMap<String, RecordList>();
+        Map<String, String> sourceStatuses = new java.util.HashMap<String, String>();
 
         // Retrieve the results from each of the threads
-        for (Future<Map<String,RecordList>> worker : workers) {
-            Map<String,RecordList> records = worker.get();
-            for (Map.Entry<String,RecordList> entry : records.entrySet()) {
-                sourceRecords.put(entry.getKey(), entry.getValue()); 
+        for (Map.Entry<String, Future<Map<String, RecordList>>> sourceEntry : workers.entrySet()) {
+            String source = sourceEntry.getKey();
+            Future<Map<String, RecordList>> worker = sourceEntry.getValue();
+            try {
+                Map<String, RecordList> records = worker.get();
+                for (Map.Entry<String, RecordList> entry : records.entrySet()) {
+                    sourceRecords.put(entry.getKey(), entry.getValue());
+                    sourceStatuses.put(source, "success");
+                }
+            } catch (Exception e) {
+                sourceStatuses.put(source, "error");
             }
         }
 
+        Map<String, Integer> counts = new java.util.HashMap<String, Integer>();
+        for (String source: sources) {
+            counts.put(source, 0);
+        }
         // Here we build a sorted list of the resulting records.
         SimpleDateFormat iso8601Format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+0000'");
         iso8601Format.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
         List<Record> sortedRecords = new ArrayList<Record>();
         List<String> sortedRecordSources = new ArrayList<String>();
-        while (true) {
+        while (pageSize == null || sortedRecords.size() < pageSize) {
             Record topRecord = null;
             String topSource = null;
             Date topDate = null;
             for (String source : sources) {
+                if (sourceStatuses.get(source).equals("success")) {
                 Record record = sourceRecords.get(source).first();
                 if (record != null) {
                     String dateTimeAttribute = activityConfig.getObject("sources").getObject(source).getString("dateTimeAttribute");
@@ -146,6 +160,7 @@
                         topDate = date;
                     }
                 }
+                }
             }
             if (topSource == null) {
                 break;
@@ -153,27 +168,7 @@
             sourceRecords.get(topSource).remove(0);
             sortedRecords.add(topRecord);
             sortedRecordSources.add(topSource);
-        }
-        
-        // Get page size number of records from the sorted records array.  Also
-        // check each record for the source updating the counts as we go along.
-        Map<String, Integer> counts = new java.util.HashMap<String, Integer>();
-        for (String source: sources) {
-            counts.put(source, 0);
-        }
-        List<Record> selectedRecords = new ArrayList<Record>();
-        List<String> selectedRecordSources = new ArrayList<String>();
-        for (int i=0; i<pageSize && i<sortedRecords.size(); i++) {
-            Record record = sortedRecords.get(i);
-            String source = sortedRecordSources.get(i);
-            counts.put(source, counts.get(source) + 1);
-            selectedRecords.add(record);
-            selectedRecordSources.add(source);
-        }
-        // If the page size is set to zero we simply return all of the records.
-        if (pageSize == 0) {
-            selectedRecords = sortedRecords;
-            selectedRecordSources = sortedRecordSources;
+            counts.put(topSource, counts.get(topSource) + 1);
         }
         
         /***********************************************************************
@@ -195,8 +190,8 @@
         }
 
         org.json.simple.JSONArray recordArrays = new org.json.simple.JSONArray();
-        for (Record record : selectedRecords) {
-            String source = selectedRecordSources.get(selectedRecords.indexOf(record));
+        for (Record record : sortedRecords) {
+            String source = sortedRecordSources.get(sortedRecords.indexOf(record));
             org.json.simple.JSONObject recordObject = new org.json.simple.JSONObject();
             for (String columnName : activityConfig.getStringArray("columns")) {
                 String attributeName = activityConfig.getObject("sources").getObject(source).getObject("columnAttributeMappings").getString(columnName);
@@ -206,7 +201,7 @@
         }
         
         org.json.simple.JSONArray recordSourceArray = new org.json.simple.JSONArray();
-        for (String recordSource : selectedRecordSources) {
+        for (String recordSource : sortedRecordSources) {
             recordSourceArray.add(recordSource);
         }
         
@@ -218,13 +213,24 @@
         org.json.simple.JSONArray totalArray = new org.json.simple.JSONArray();
         for (String source : sources) {
             RecordList records = sourceRecords.get(source);
-            totalArray.add(Integer.valueOf(records.meta("count")));
+            if (sourceStatuses.get(source).equals("success")) {
+                totalArray.add(Integer.valueOf(records.meta("count")));
+            } else {
+                totalArray.add(0);
+            }
+        }
+
+        org.json.simple.JSONArray statusArray = new org.json.simple.JSONArray();
+        for (String source : sources) {
+            statusArray.add(sourceStatuses.get(source));
         }
 
         // Write to output stream
         out.clear();
 %>
 {
+    "responseCode"  : 200,
+    "responseText"  : "OK",
     "records"       : <%= recordArrays.toJSONString() %>,
     "recordSources" : <%= recordSourceArray.toJSONString() %>,
     "columns"       : <%= columnArray.toJSONString() %>,
@@ -233,7 +239,8 @@
     "counts"        : <%= countArray.toJSONString() %>,
     "totals"        : <%= totalArray.toJSONString() %>,
     "pageSize"      : <%= pageSize %>,
-    "sortOrder"     : "<%= sortOrder %>"
+    "sortOrder"     : "<%= sortOrder %>",
+    "statuses"      : <%= statusArray.toJSONString() %>
 }
 <%
     }
