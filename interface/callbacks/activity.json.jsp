@@ -227,35 +227,34 @@
             statusArray.add(sourceStatuses.get(source));
         }
 
-        // Write to output stream
+        // Build the resulting JSON object for a success.
+        org.json.simple.JSONObject result = new org.json.simple.JSONObject();
+        result.put("responseCode", 200);
+        result.put("responseText", "OK");
+        result.put("records", recordArrays);
+        result.put("recordSources", recordSourceArray);
+        result.put("columns", columnArray);
+        result.put("sources", sourceArray);
+        result.put("offsets", offsetArray);
+        result.put("counts", countArray);
+        result.put("totals", totalArray);
+        result.put("pageSize", pageSize);
+        result.put("sortOrder", sortOrder);
+        result.put("statuses", statusArray);
         out.clear();
-%>
-{
-    "responseCode"  : 200,
-    "responseText"  : "OK",
-    "records"       : <%= recordArrays.toJSONString() %>,
-    "recordSources" : <%= recordSourceArray.toJSONString() %>,
-    "columns"       : <%= columnArray.toJSONString() %>,
-    "sources"       : <%= sourceArray.toJSONString() %>,
-    "offsets"       : <%= offsetArray.toJSONString() %>,
-    "counts"        : <%= countArray.toJSONString() %>,
-    "totals"        : <%= totalArray.toJSONString() %>,
-    "pageSize"      : <%= pageSize %>,
-    "sortOrder"     : "<%= sortOrder %>",
-    "statuses"      : <%= statusArray.toJSONString() %>
-}
-<%
+        out.println(result.toJSONString());
     } catch (Exception e) {
+        // Use a string writer to print the stack trace to.
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
         // Build the resulting JSON object for an exception.  We will set the
         // response code to 500 and the response message to the stack trace of
         // the current exception.
-        org.json.simple.JSONObject resultObject = new org.json.simple.JSONObject();
-        resultObject.put("responseCode", 500);
-        resultObject.put("responseText", writer.toString());
+        org.json.simple.JSONObject result = new org.json.simple.JSONObject();
+        result.put("responseCode", 500);
+        result.put("responseText", writer.toString());
         out.clear();
-        out.println(resultObject.toJSONString());
+        out.println(result.toJSONString());
     }
 }
 %>
