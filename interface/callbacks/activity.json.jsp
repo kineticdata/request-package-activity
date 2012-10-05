@@ -1,5 +1,4 @@
-<%@page import="com.kd.kineticSurvey.impl.SurveyLogger"%>
-<%@page contentType="text/html; charset=UTF-8" import="java.util.concurrent.*"%>
+<%@page contentType="text/html; charset=UTF-8"%>
 <%@include file="../../framework/includes/packageInitialization.jspf"%>
 <%
     if (context == null) {

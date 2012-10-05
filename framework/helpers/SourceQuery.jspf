@@ -1,4 +1,3 @@
-<%@page import="java.util.*,java.util.concurrent.*,com.kineticdata.bridges.RecordList" %>
 <%!
     // Define a new thread worker
     private static class SourceQuery implements Callable<Map<String,RecordList>> {
