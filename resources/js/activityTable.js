@@ -63,8 +63,10 @@ var __bind = function(fn, me) {
  *          previous pages.  Offset arrays are pushed to the stack when a
  *          next page is retrieved.
  *  status - A string that represents the response status from the ajax request.
- *  statusText - A string that represents the response status message from the
- *               ajax request.
+ *  responseCode - A number that represents the response code from the ajax
+ *                 request.
+ *  responseText - A string that represents the response status message from the
+ *                 ajax request.
  */
 function ActivityTable(options) {
     this.name = options["name"];
@@ -96,21 +98,23 @@ ActivityTable.prototype.doRequest = function(offsets, callback) {
         success: __bind(function(data) {
             // Parse the response object.
             var response = jQuery.parseJSON(data);
-            this.status = "success";
-            this.sources = response["sources"];
-            this.columns = response["columns"];
-            this.sortOrder = response["sortOrder"];
-            this.pageSize = response["pageSize"];
-            this.counts = response["counts"];
-            this.totals = response["totals"];
-            this.recordSources = response["recordSources"];
-            if (callback) {callback(response);}
-            if (this.loadCompleteCallback) {this.loadCompleteCallback(this);}
-        }, this),
-        error: __bind(function(data) {
-            this.status = "error";
-            this.statusText = data.statusText;
-            if (this.loadCompleteCallback) {this.loadCompleteCallback(this);}
+            if (response["responseCode"] === 200) {
+                this.status = "success";
+                this.sources = response["sources"];
+                this.columns = response["columns"];
+                this.sortOrder = response["sortOrder"];
+                this.pageSize = response["pageSize"];
+                this.counts = response["counts"];
+                this.totals = response["totals"];
+                this.recordSources = response["recordSources"];
+                if (callback) {callback(response);}
+                if (this.loadCompleteCallback) {this.loadCompleteCallback(this);}
+            } else {
+                this.status = "error";
+                this.responseCode = response["responseCode"];
+                this.responseText = response["responseText"];
+                if (this.loadCompleteCallback) {this.loadCompleteCallback(this);}
+            }
         }, this)
     });
 }

@@ -125,7 +125,7 @@ jQuery(document).ready(function() {
                 jQuery("#messages .message.success .content").text((offset+1) + "-" + (offset+count) + " of " + total + " records");
                 jQuery("#messages .message.success").show();
             } else if (self.status === "error") {
-                jQuery("#messages .message.error .content").text(self.statusText);
+                jQuery("#messages .message.error .content").text("There was an error retrieving table data.");
                 jQuery("#messages .message.error").show();
             }
             jQuery("#overlay").hide();
