@@ -5,6 +5,7 @@
     if (context == null) {
         ResponseHelper.sendUnauthorizedResponse(response);
     } else {
+        try {
         /***********************************************************************
          * LOAD AND VALIDATE THE CONFIGURATION
          **********************************************************************/
@@ -244,5 +245,17 @@
     "statuses"      : <%= statusArray.toJSONString() %>
 }
 <%
+    } catch (Exception e) {
+        StringWriter writer = new StringWriter();
+        e.printStackTrace(new PrintWriter(writer));
+        // Build the resulting JSON object for an exception.  We will set the
+        // response code to 500 and the response message to the stack trace of
+        // the current exception.
+        org.json.simple.JSONObject resultObject = new org.json.simple.JSONObject();
+        resultObject.put("responseCode", 500);
+        resultObject.put("responseText", writer.toString());
+        out.clear();
+        out.println(resultObject.toJSONString());
     }
+}
 %>
