@@ -130,7 +130,7 @@
                     sourceStatuses.put(source, "success");
                 }
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace(System.out);
                 sourceStatuses.put(source, "error");
             }
         }
