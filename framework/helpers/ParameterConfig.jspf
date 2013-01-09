@@ -1,8 +1,8 @@
 <%!
     public static class ParameterConfig {
-        private static HttpServletRequest request;
-        private static HelperContext context;
-        private static Bundle bundle;
+        private HttpServletRequest request;
+        private HelperContext context;
+        private Bundle bundle;
         
         public ParameterConfig(HttpServletRequest request, HelperContext context, Bundle bundle) {
             this.request = request;
