@@ -107,7 +107,7 @@
             // For each of the activity sources
             for (String source : sources) {
                 // Initialize the worker object
-                SourceQuery worker = new SourceQuery(context, activityConfig, parameterConfig,
+                SourceQuery worker = new SourceQuery(context.getCopy(), activityConfig, parameterConfig,
                         templateId, source, offsets, pageSize, sortOrder);
                 // Add the worker to the threadpool and have it start processing
                 workers.put(source, threadpool.submit(worker));
