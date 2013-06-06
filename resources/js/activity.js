@@ -179,8 +179,6 @@ function idCellCallback(element, sData, oData, iRow, iColumn) {
             getChangeDialog(oData["Id"]);
         } else if (oData["Source"] === "Incident") {
             getIncidentDialog(oData["Id"]);
-        } else if (oData["Source"] === "Work Order") {
-            getWorkOrderDialog(oData["Id"]);
         }
     });
 }
@@ -273,19 +271,6 @@ function getIncidentDialog(incidentId) {
         data: {
             id: incidentId,
             templateId: BUNDLE.config.templateId
-        },
-        success: function(data) {
-            createDialog(data);
-        }
-    });
-}
-function getWorkOrderDialog(workOrderId) {
-    BUNDLE.ajax({
-        url: BUNDLE.packagePath + "interface/callbacks/workOrderDialog.html.jsp",
-        data: {
-            id: workOrderId,
-            templateId: BUNDLE.config.templateId
-
         },
         success: function(data) {
             createDialog(data);
