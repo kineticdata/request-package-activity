@@ -20,8 +20,8 @@ var columnConfig = [
         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
             if (oData["Has Children"] === "Has Children") {
                 childrenCellCallback(element, sData, oData, iRow, iColumn);
-                jQuery(element).wrapInner('<div class="wrapper links">');
             }
+            jQuery(element).wrapInner('<div class="wrapper links">');
         }},
     // For the Id column we replace the text content with a link that has a
     // javascript click event bound to it.  This cell callback has been put
