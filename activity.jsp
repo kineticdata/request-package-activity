@@ -23,9 +23,6 @@
         <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/jquery.dataTables.js"></script>
         <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/activityTable.js"></script>
         <script type="text/javascript" src="<%=bundle.packagePath()%>resources/js/activity.js"></script>
-        <script type="text/javascript">
-            BUNDLE.config.locale = '<%= context.getContext().getLocale() %>';
-        </script>
     </head>
 
     <body>

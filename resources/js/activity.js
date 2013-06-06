@@ -18,10 +18,10 @@ var columnConfig = [
     // cleanliness.
     {mData: null,
         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
-            //if (oData["Has Children"] === "Has Children") {
+            if (oData["Has Children"] === "Has Children") {
                 childrenCellCallback(element, sData, oData, iRow, iColumn);
                 jQuery(element).wrapInner('<div class="wrapper links">');
-            //}
+            }
         }},
     // For the Id column we replace the text content with a link that has a
     // javascript click event bound to it.  This cell callback has been put
@@ -229,11 +229,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                     bInfo: false,
                     bAutoWidth: false,
                     aoColumns: columnConfig,
-                    aaData: [
-                        {"Source" : "Incident", "Status" : "Closed","Description":"User needs access to specific applications.","Instance Id":null,"Has Children":null,"Id":"INC_CAL_1000001","Created At":"2008-11-07T05:14:15+0000"},
-                        {"Source" : "Incident", "Status" : "Closed","Description":"User needs access to specific applications.","Instance Id":null,"Has Children":null,"Id":"INC_CAL_1000001","Created At":"2008-11-07T05:14:15+0000"}
-                    ]
-                    //aaData: response["records"]
+                    aaData: response["records"]
                 };
                 childRow.find(".childTable").dataTable(dataTableOptions);
                 childRow.find(".childContainer").slideDown(200);
@@ -311,8 +307,7 @@ function createDialog(content) {
 
 /*
  * This function takes a ISO8601 date string (the exact format expected from a
- * bridge request) and converts it to a more user-friendly format.  It looks at
- * a BUNDLE.config.locale value to determine which date format mask to use.
+ * bridge request) and converts it to a more user-friendly format.
  */
 function formatDate(dateString) {
     var match = dateString.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\+0000/);
@@ -322,11 +317,7 @@ function formatDate(dateString) {
     var date = new Date();
     date.setUTCFullYear(match[1], parseInt(match[2].replace(/^0/,""))-1, match[3]);
     date.setUTCHours(match[4], match[5], match[6]);
-    if (BUNDLE.config.locale === "EN") {
-        return date.format("mmm d yyyy h:MM:ss TT");
-    } else {
-        return date.format("isoDateTime");
-    }
+    return date.format("mmm d yyyy h:MM:ss TT");
 }
 
 /*
