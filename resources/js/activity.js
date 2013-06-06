@@ -198,7 +198,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
     jQuery(element).empty();
     var minAnchor = jQuery('<a class="minimize hidden" href="javascript:void(0)">-</a>');
     var maxAnchor = jQuery('<a class="maximize" href="javascript:void(0)">+</a>');
-    var loadingImage = jQuery('<img class="hidden" src="' + BUNDLE.bundlePath + 'common/resources/images/spinner_00427E_FFFFFF.gif"></img>');
+    var loadingImage = jQuery('<img class="hidden" src="' + BUNDLE.packagePath + 'resources/images/spinner_00427E_FFFFFF.gif"></img>');
     jQuery(element).addClass("links");
     jQuery(element).append(maxAnchor);
     jQuery(element).append(minAnchor);

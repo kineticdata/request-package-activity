@@ -34,7 +34,7 @@
             <div id="contentBody">
                 <div id="messages">
                     <div class="message success hidden"><span class="label">Viewing: </span><span class="content"></span></div>
-                    <div class="message loading hidden"><span class="label">Loading </span><span class="content"></span><img src="<%= bundle.bundlePath()%>common/resources/images/spinner_00427E_FFFFFF.gif"></div>
+                    <div class="message loading hidden"><span class="label">Loading </span><span class="content"></span><img src="<%= bundle.packagePath()%>resources/images/spinner_00427E_FFFFFF.gif"></div>
                     <div class="message error hidden"><span class="label">Error: </span><span class="content"></span></div>
                 </div>
                 <div id="overlayContainer">
