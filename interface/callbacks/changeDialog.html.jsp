@@ -14,7 +14,7 @@
         parameters.clear();
         parameters.put("Change Id", id);
         String[] attributes = new String[]{"Source", "Type", "Created At" };
-        RecordList workInfoRecords = connector.search("Change Work Info", "By Change Id", parameters, attributes);
+        RecordList workInfoRecords = connector.search("Activity Change Work Info", "By Change Id", parameters, attributes);
         out.clear();
 %>
 <div class="sourceDetails" title="Change Details">

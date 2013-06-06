@@ -215,6 +215,13 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                 pageSize: "all"
             },
             success: function(data) {
+                var childColumnConfig = [columnConfig[0], columnConfig[1], columnConfig[2],
+                    columnConfig[3], columnConfig[4], columnConfig[5] = {
+                        mData: columnConfig[5]["mData"],
+                        fnRender: function(o) { return response["recordSources"][o.iDataRow]; },
+                        fnCreatedCell: columnConfig[5]["fnCreatedCell"]
+                    }
+                ];
                 loadingImage.hide();
                 minAnchor.show();
                 var response = jQuery.parseJSON(data);
@@ -226,7 +233,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                     bSort: false,
                     bInfo: false,
                     bAutoWidth: false,
-                    aoColumns: columnConfig,
+                    aoColumns: childColumnConfig,
                     aaData: response["records"]
                 };
                 childRow.find(".childTable").dataTable(dataTableOptions);
