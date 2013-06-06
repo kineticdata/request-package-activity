@@ -26,7 +26,7 @@
     </head>
 
     <body>
-        <div id="bodyContainer">
+        <div class="container">
             <%@include file="../../common/interface/fragments/contentHeader.jspf"%>
             <div id="contentBody">
                 <div id="messages">

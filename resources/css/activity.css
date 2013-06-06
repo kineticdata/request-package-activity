@@ -66,6 +66,7 @@ table#status td.links a.maximize {
     font-size: 18px;
     font-family: monospace;
     font-weight: bold;
+    text-decoration: none;
 }
 table#status td.source {
     color: #777777;
@@ -95,8 +96,8 @@ table#status td .wrapper {
 }
 table#status td .wrapper.links        { width: 35px; }
 table#status td .wrapper.id           { width: 140px; }
-table#status td .wrapper.status       { width: 120px; }
-table#status td .wrapper.createdAt    { width: 160px; }
+table#status td .wrapper.status       { width: 130px; }
+table#status td .wrapper.createdAt    { width: 170px; }
 table#status td .wrapper.description  { width: 400px; }
 table#status td .wrapper.source       { width: 85px; }
 
