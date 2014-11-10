@@ -5,18 +5,32 @@
  * These style properties are applied to the table controls displayed on the
  * page.
  */
-.tableControls .tableControl {
-    background-color: #A1A1A1;
+
+#tableContainer {
+    /*font-size: .9em;*/
+    font-size: 1.0em;
+    margin-top: 10px;
+}
+
+.tableControls {
+    margin-bottom: 15px;
+}
+ 
+ .tableControls .tableControl {
+    background-color: #4D4F53;
     color: #FFFFFF;
     cursor: pointer;
     float: left;
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     line-height: 24px; /* This is equal to the height of the button element in the sources control */
     margin-right: 5px;
     padding: 2px 5px;
     vertical-align: top;
+    border-radius: 6px;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
 }
 .tableControls .tableControl.pageSize, .tableControls .tableControl.sortOrder {
     float: right;
@@ -25,7 +39,7 @@
     position: relative;
 }
 .tableControls .tableControl.sources .sourcesSelector {
-    background-color: #A1A1A1;
+    background-color: #4D4F53;
     left: 0;
     position: absolute;
     top: 28px; /* This is equal to the rendered height of the sources control */
@@ -45,6 +59,17 @@
  * implementation contains child tables they will also be affected most of the
  * properties below (unless otherwise noted).
  */
+#tableContainer table {
+    width: 100%;
+}
+#tableContainer table tr {
+    height: 30px;
+}
+
+#tableContainer thead {
+    background-color: #003F72;
+    color: #FFFFFF;
+}
 table#status tr {
     height: 30px;
 }
@@ -53,8 +78,8 @@ table#status tr {
  * If you wish to modify it to apply to any tables within simply remove the
  * greater-than characters from the selector.
  */
-table#status > tbody > tr.even { background: #E0E0E0; }
-table#status > tbody > tr.odd  { background: #E9E9E9; }
+table#status > tbody > tr.even { background: #FFF; }
+table#status > tbody > tr.odd  { background: #C9CAC8; }
 table#status td {
     padding: 0;
 }
@@ -82,9 +107,9 @@ table#status td.source {
  * pixels.  To override this width add another style class to the element and
  * define a width for that class (see below for examples of this).
  */
-table#status td .wrapper {
+#tableContainer table td .wrapper {
     overflow: hidden;
-    width: 150px;
+    /* width: 150px;*/
     white-space: pre-wrap; /* css-3 */
     white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
     white-space: -pre-wrap; /* Opera 4-6 */
@@ -94,12 +119,23 @@ table#status td .wrapper {
     white-space: -hp-pre-wrap; /* HP Printers */
     white-space: pre-line;
 }
-table#status td .wrapper.links        { width: 35px; }
-table#status td .wrapper.id           { width: 140px; }
-table#status td .wrapper.status       { width: 130px; }
-table#status td .wrapper.createdAt    { width: 170px; }
-table#status td .wrapper.description  { width: 400px; }
-table#status td .wrapper.source       { width: 85px; }
+.tableContainer table td .wrapper.links        { width: 25px; }
+.tableContainer table td .wrapper.id           { width: 125px; }
+.tableContainer table td .wrapper.status       { width: 200px; }
+/*.tableContainer table td .wrapper.statusReason       { width: 100px; }*/
+.tableContainer table td .wrapper.createdAt    { width: 127px; }
+/*.tableContainer table td .wrapper.expectedResolution    { width: 118px; }*/
+.tableContainer table td .wrapper.description  { width: 254px; }
+.tableContainer table td .wrapper.source       { width: 95px;}
+
+.tableContainer table th .wrapper.links        { width: 25px; }
+.tableContainer table th .wrapper.id           { width: 125px; }
+.tableContainer table th .wrapper.status       { width: 200px; }
+/*.tableContainer table th .wrapper.statusReason       { width: 100px; }*/
+.tableContainer table th .wrapper.createdAt    { width: 127px; }
+/*.tableContainer table th .wrapper.expectedResolution    { width: 118px; }*/
+.tableContainer table th .wrapper.description  { width: 254px; }
+.tableContainer table th .wrapper.source       { width: 95px;}
 
 /*
  * These styles are applied to the child table that is added by adding a row
@@ -107,12 +143,12 @@ table#status td .wrapper.source       { width: 85px; }
  * of the child table is hidden so that we can use a slide down effect to
  * present the data.
  */
-table#status tr.childRow {
+#tableContainer table tr.childRow {
     height: 0;
 }
-table#status tr.childRow .childContainer {
+#tableContainer table tr.childRow .childContainer {
     display: none;
 }
-table#status tr.childRow .childContainer table.childTable thead {
+#tableContainer table tr.childRow .childContainer table.childTable thead {
     display: none;
 }

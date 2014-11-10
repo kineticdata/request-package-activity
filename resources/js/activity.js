@@ -26,26 +26,28 @@ var columnConfig = [
     // For the Id column we replace the text content with a link that has a
     // javascript click event bound to it.  This cell callback has been put
     // in another method named idCellCallback (see below) for cleanliness.
-    {mData: "Id", sTitle: "Id",
+    {mData: "Id", sTitle: "Id".localize(),
         fnCreatedCell: function(element, sData, oData, iRow, iColumn) {
             idCellCallback(element, sData, oData, iRow, iColumn);
             jQuery(element).wrapInner('<div class="wrapper id">');
         }},
-    {mData: "Status", sTitle: "Status",
+    {mData: "Status", sTitle: "Status".localize(),
         fnCreatedCell: function(element) {
+			jQuery(element).text(jQuery(element).text().localize());
             jQuery(element).wrapInner('<div class="wrapper status">');
         }},
     // For the Created At column we use the formatDate function to convert
     // the date to a more user-friendly format.
-    {mData: "Created At", sTitle: "Created At",
+    {mData: "Created At", sTitle: "Created At".localize(),
         fnRender: function(o) {
             return formatDate(o.aData["Created At"]);
         },
         fnCreatedCell: function(element) {
             jQuery(element).wrapInner('<div class="wrapper createdAt">');
         }},
-    {mData: "Description", sTitle: "Description",
+    {mData: "Description", sTitle: "Description".localize(),
         fnCreatedCell: function(element) {
+			jQuery(element).text(jQuery(element).text().localize());
             jQuery(element).wrapInner('<div class="wrapper description">');
         }},
     // For the Source column, there is initially no data, but we get the
@@ -54,6 +56,7 @@ var columnConfig = [
     {mData: "Source",
         fnRender: function(o) {return activityTable.recordSources[o.iDataRow];},
         fnCreatedCell: function(element) {
+			jQuery(element).text(jQuery(element).text().localize());
             jQuery(element).addClass("source");
             jQuery(element).wrapInner('<div class="wrapper source">');
         }}
@@ -61,12 +64,34 @@ var columnConfig = [
 
 
 jQuery(document).ready(function() {
+    // Get query string parameters into an object
+    var urlParameters = getUrlParameters();
+    var tableNames = {
+        "Open": "Open",
+        "Closed": "Closed",
+        "Draft": "Draft",
+        "Pending Approval": "PendingApproval",
+        "Closed Approval": "ClosedApproval",
+		"Pending Survey": "PendingSurvey"
+    }
+    // Determine if the status is a real status
+    var statusCheck = true;
+    $.each(tableNames, function(index) { 
+        if(urlParameters.status === index) {
+            statusCheck = false;
+            return false;
+        }
+    });
+    if(statusCheck) {
+        urlParameters.status = 'Open';
+    }
+    
     // Here we instantiate the main activity table of the page.  This invovles
     // passing in a few configuration parameters as well as defining some
     // callback handlers that are called when requests are sent and responded to
     // as well as one for configuration of the underlying datatable.
     activityTable = new ActivityTable({
-        name: "status",
+        name: tableNames[urlParameters.status],
         container: "#status",
         templateId: BUNDLE.config.templateId,
         // Use the column configuration defined above.
@@ -95,7 +120,7 @@ jQuery(document).ready(function() {
                 if (jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").length === 0) {
                     var sources = jQuery(".tableControls .tableControl.sources .sourcesCheckboxes");
                     jQuery.each(activityTable.sources, function(index, value) {
-                        var input = jQuery('<div><input type="checkbox" value="' + value + '">' + value + '</option></div>');
+                        var input = jQuery('<div><input type="checkbox" value="' + value + '">' + value.localize() + '</option></div>');
                         jQuery(sources).append(input);
                     });
                 }
@@ -122,10 +147,10 @@ jQuery(document).ready(function() {
                 jQuery.each(self.counts, function(index, number) { count += number; });
                 var total = 0;
                 jQuery.each(self.totals, function(index, number) { total += number; });
-                jQuery("#messages .message.success .content").text((offset+1) + "-" + (offset+count) + " of " + total + " records");
+                jQuery("#messages .message.success .content").text((offset+1) + "-" + (offset+count) + " " +"of".localize() + " " + total + " " + "records".localize());
                 jQuery("#messages .message.success").show();
             } else if (self.status === "error") {
-                jQuery("#messages .message.error .content").text("There was an error retrieving table data.");
+                jQuery("#messages .message.error .content").text("There was an error retrieving table data.".localize());
                 jQuery("#messages .message.error").show();
             }
             jQuery("#overlay").hide();
@@ -171,6 +196,10 @@ jQuery(document).ready(function() {
 function idCellCallback(element, sData, oData, iRow, iColumn) {
     jQuery(element).empty();
     var anchorElement = jQuery('<a href="javascript:void(0)">'+oData["Id"]+'</a>');
+	if (this.activityTable.name === "PendingApproval" || this.activityTable.name === "PendingSurvey") {
+	anchorElement = jQuery('<a href="DisplayPage?csrv=' +oData["Instance Id"]+ '">'+oData["Id"]+'</a>');
+	jQuery(element).append(anchorElement);
+	} else {
     jQuery(element).append(anchorElement);
     jQuery(anchorElement).click(function() {
         if (oData["Source"] === "Request") {
@@ -179,8 +208,11 @@ function idCellCallback(element, sData, oData, iRow, iColumn) {
             getChangeDialog(oData["Id"]);
         } else if (oData["Source"] === "Incident") {
             getIncidentDialog(oData["Id"]);
-        }
+        } else if (oData["Source"] === "Work Order") {
+            getWorkOrderDialog(oData["Id"]);
+		}
     });
+	}
 }
 
 // This function is a callback handler for the cells that contain child data
@@ -217,7 +249,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
             success: function(data) {
                 var childColumnConfig = [columnConfig[0], columnConfig[1], columnConfig[2],
                     columnConfig[3], columnConfig[4], columnConfig[5] = {
-                        mData: columnConfig[5]["mData"],
+                        mData: columnConfig[5]["mData"].localize(),
                         fnRender: function(o) { return response["recordSources"][o.iDataRow]; },
                         fnCreatedCell: columnConfig[5]["fnCreatedCell"]
                     }
@@ -234,7 +266,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
                     bInfo: false,
                     bAutoWidth: false,
                     aoColumns: childColumnConfig,
-                    aaData: response["records"]
+                    aaData: response["records"].localize()
                 };
                 childRow.find(".childTable").dataTable(dataTableOptions);
                 childRow.find(".childContainer").slideDown(200);
@@ -253,7 +285,7 @@ function childrenCellCallback(element, sData, oData, iRow, iColumn) {
 
 function getRequestDialog(submissionInstanceId) {
     BUNDLE.ajax({
-        url: BUNDLE.bundlePath + "packages/submissions/interface/callbacks/submissionDetails.html.jsp",
+        url: BUNDLE.packagePath + "interface/callbacks/submissionDetails.html.jsp",
         data: {csrv: submissionInstanceId},
         success: function(data) {
             createDialog(data);
@@ -284,10 +316,23 @@ function getIncidentDialog(incidentId) {
         }
     });
 }
+
+function getWorkOrderDialog(workOrderId) {
+    BUNDLE.ajax({
+        url: BUNDLE.packagePath + "interface/callbacks/workOrderDialog.html.jsp",
+        data: {
+            id: workOrderId,
+            templateId: BUNDLE.config.templateId
+        },
+        success: function(data) {
+            createDialog(data);
+        }
+    });
+}
 function createDialog(content) {
     var element = jQuery(content);
     element.find(".value.dateTime").each(function(index, value) {
-       jQuery(value).text(formatDate(jQuery(value).text())); 
+       jQuery(value).text(formatDate(jQuery(value).text().localize())); 
     });
     jQuery('body').append(element);
     element.dialog({

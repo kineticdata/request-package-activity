@@ -57,6 +57,7 @@
 --%>
 <% PackageHelper packageHelper = new PackageHelper(bundle); %>
 <% PathHelper pathHelper = new PathHelper(bundle); %>
+<%@include file="../helpers/SubmissionsHelper.jspf" %>
 
 <%--
     Include the package configuration file.
@@ -75,12 +76,21 @@
 <% ConfigurationHelper.loadConfiguration(application.getRealPath(bundle.relativePackagePath()+"config/activity.json")); %>
 
 <%--
-    Include some classes that are necesary for making bridge data requests that
-    are a part of this package.
+    Language Activities:
+	1.  Set the resourceBundle variables that will be used in this package (which are instantiated 
+	    in the languageInitialization.jspf fileInstantiate appropriate language resource bundles.)
+	    This required that the language configuration has been executed.
+	2.  Populate the variable i18nValues for the appropriate resourceBundles (if they have 
+	    "javascript.<keyvalue>" entries.  The i18nValues variable was also instantiated in the 
+		languageInitialization.jspf file.
 --%>
-<%@page import="com.kd.ksr.bridges.KsrBridgeConnector"%>
-<%@page import="com.kineticdata.bridges.BridgeConnector"%>
-<%@page import="com.kineticdata.bridges.Count"%>
-<%@page import="com.kineticdata.bridges.Record"%>
-<%@page import="com.kineticdata.bridges.RecordList"%>
-<%@page import="java.util.concurrent.*"%>
+<%  
+    // Set real path to the package on the webserver
+    String packageRealPath = getServletContext().getRealPath(bundle.relativePackagePath());
+    // Set the absolute path to the directory containing the locale property files
+    String packageTranslationPath = packageRealPath + File.separator + "resources" + File.separator + "languages";
+    // Set package resource bundle
+	ResourceBundle packageResourceBundle = ThemeLocalizer.getResourceBundle("Activity", preferredLocale, packageTranslationPath);
+    // Set the values used by javascript
+    i18nValues = ThemeLocalizer.getJavaScriptValues(packageResourceBundle, i18nValues);
+%>

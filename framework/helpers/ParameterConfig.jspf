@@ -3,15 +3,40 @@
         private HttpServletRequest request;
         private HelperContext context;
         private Bundle bundle;
+		private Person personRecord;
         
         public ParameterConfig(HttpServletRequest request, HelperContext context, Bundle bundle) {
             this.request = request;
             this.context = context;
             this.bundle = bundle;
+			
+			this.personRecord = Person.findByUsername(context, context.getUserName());
+			if (this.personRecord == null) {
+				throw new RuntimeException("Could not find person record for: " + context.getUserName());
+			}
+			Logger logger = LogHelper.getLogger();
+			try { logger.debug("Working on parameter config."); } catch (Exception e) { logger.error("KAAAAAAAAHN! -- It failed: " + e); }
         }
         
         public String get(String model, String parameter) {
-            if ("Activity Request".equals(model)) {}
+			Logger logger = LogHelper.getLogger();
+			try { logger.debug("Parameter Config: model: " + model + " parameter:" + parameter); } catch (Exception e) { logger.error("KAAAAAAAAHN! -- It failed: " + e); }
+			System.out.println("Parameter Config: " + model + " " + parameter);
+            // DEFAULT
+            if ("Submitter".equals(parameter)) {
+				try { logger.debug("Submitter: " + context.getUserName()); } catch (Exception e) { logger.error("KAAAAAAAAHN! -- It failed: " + e); }
+                return context.getUserName();
+            }
+            if ("PersonId".equals(parameter)) {
+                //return context.getUserName();
+				try { logger.debug("Person ID= " + personRecord.getPersonId()); } catch (Exception e) { logger.error("KAAAAAAAAHN! -- It failed: " + e); }
+				return personRecord.getPersonId();
+            }
+			if ("Approver".equals(parameter)) {
+				try { logger.debug("Approver: " + context.getUserName()); } catch (Exception e) { logger.error("KAAAAAAAAHN! -- It failed: " + e); }
+                return context.getUserName();
+            }
+			if ("Activity Request".equals(model)) {}
             if ("Activity Incident".equals(model)) {
                 if ("Request Id".equals(parameter)) {
                     return request.getParameter("requestId");
@@ -26,10 +51,6 @@
                 if ("Request Id".equals(parameter)) {
                     return request.getParameter("requestId");
                 }
-            }
-            // DEFAULT
-            if ("Submitter".equals(parameter)) {
-                return context.getUserName();
             }
             return null;
         }

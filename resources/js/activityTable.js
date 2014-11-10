@@ -133,9 +133,9 @@ ActivityTable.prototype.initialize = function() {
                 "bDestroy": true,
                 "bAutoWidth": false,
                 "aoColumns": [
-                    {"mData": "Id", "sTitle": "Id"},
-                    {"mData": "Letter", "sTitle": "Letter"},
-                    {"mData": "Created At", "sTitle": "Created At"}
+                    {"mData": "Id", "sTitle": "Id".localize()},
+                    {"mData": "Letter", "sTitle": "Letter".localize()},
+                    {"mData": "Created At", "sTitle": "Created At".localize()}
                 ],
                 "aaData": response["records"]
             };

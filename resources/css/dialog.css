@@ -13,9 +13,9 @@
     overflow-y: scroll;
 }
 .sourceDetails .header, .submissionDetails .header {
-    background-color: #A1A1A1;
+    background-color: #4D4F53;
     color: white;
-    font-size: 1.1em;
+   /* font-size: 1.1em;*/
     font-weight: bold;
     padding: 5px;
 }

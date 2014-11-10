@@ -1,18 +1,98 @@
 {
-    "status": {
+    "Open": {
         "columns": [
             "Id",
             "Status",
+            "Status Reason",
             "Created At",
             "Description",
             "Source",
             "Has Children",
-            "Instance Id"
+            "Instance Id",
+            "Expected Resolution Date"
         ],
         "sources": {
             "Request": {
                 "modelName": "Activity Request",
-                "qualificationName": "By Submitter",
+                "qualificationName": "Open By Submitter",
+                "parameterNames": [
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Description",
+                    "Has Children": "Has Children",
+                    "Instance Id": "Instance Id",
+                    "Expected Resolution Date": "Expected Resolution Date"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Incident": {
+                "modelName": "Activity Incident",
+                "qualificationName": "Open By PersonId",
+                "parameterNames": [
+                    "PersonId"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Status Reason": "Status Reason",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Change": {
+                "modelName": "Activity Change",
+                "qualificationName": "Open By PersonId",
+                "parameterNames": [
+                    "PersonId"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Status Reason": "Status Reason",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Work Order": {
+                "modelName": "Activity Work Order",
+                "qualificationName": "Open By PersonId",
+                "parameterNames": [
+                    "PersonId"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Status Reason": "Status Reason",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    },
+    
+    "Closed": {
+        "columns": [
+            "Id",
+            "Status",
+            "Status Reason",
+            "Created At",
+            "Description",
+            "Source",
+            "Has Children",
+            "Instance Id",
+            "Expected Resolution Date"
+        ],
+        "sources": {
+            "Request": {
+                "modelName": "Activity Request",
+                "qualificationName": "Closed By Submitter",
                 "parameterNames": [
                     "Submitter"
                 ],
@@ -28,13 +108,14 @@
             },
             "Incident": {
                 "modelName": "Activity Incident",
-                "qualificationName": "By Submitter",
+                "qualificationName": "Closed By PersonId",
                 "parameterNames": [
-                    "Submitter"
+                    "PersonId"
                 ],
                 "columnAttributeMappings": {
                     "Id": "Id",
                     "Status": "Status",
+                    "Status Reason": "Status Reason",
                     "Created At": "Created At",
                     "Description": "Description"
                 },
@@ -42,7 +123,53 @@
             },
             "Change": {
                 "modelName": "Activity Change",
-                "qualificationName": "By Submitter",
+                "qualificationName": "Closed By PersonId",
+                "parameterNames": [
+                    "PersonId"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Status Reason": "Status Reason",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Work Order": {
+                "modelName": "Activity Work Order",
+                "qualificationName": "Closed By PersonId",
+                "parameterNames": [
+                    "PersonId"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Status Reason": "Status Reason",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    },
+    
+    "Draft": {
+        "columns": [
+            "Id",
+            "Status",
+            "Status Reason",
+            "Created At",
+            "Description",
+            "Source",
+            "Has Children",
+            "Instance Id",
+            "Expected Resolution Date"
+        ],
+        "sources": {
+            "Request": {
+                "modelName": "Activity Request",
+                "qualificationName": "Draft By Submitter",
                 "parameterNames": [
                     "Submitter"
                 ],
@@ -50,7 +177,72 @@
                     "Id": "Id",
                     "Status": "Status",
                     "Created At": "Created At",
-                    "Description": "Description"
+                    "Description": "Description",
+                    "Instance Id": "Instance Id"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    },
+    
+    "PendingApproval": {
+        "columns": [
+            "Id",
+            "Status",
+            "Status Reason",
+            "Created At",
+            "Description",
+            "Source",
+            "Has Children",
+            "Instance Id",
+            "Expected Resolution Date",
+            "Requester"
+        ],
+        "sources": {
+            "Request": {
+                "modelName": "Activity Approval",
+                "qualificationName": "Pending By Approver",
+                "parameterNames": [
+                    "Approver"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Originating ID",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Originating Form",
+                    "Requester": "Requester",
+                    "Instance Id": "Instance Id"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    },
+    
+    "ClosedApproval": {
+        "columns": [
+            "Id",
+            "Status",
+            "Status Reason",
+            "Created At",
+            "Description",
+            "Source",
+            "Has Children",
+            "Instance Id",
+            "Expected Resolution Date"
+        ],
+        "sources": {
+            "Request": {
+                "modelName": "Activity Approval",
+                "qualificationName": "Closed By Approver",
+                "parameterNames": [
+                    "Approver"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Originating ID",
+                    "Status": "Status",
+                    "Created At": "Created At",
+                    "Description": "Originating Form",
+                    "Instance Id": "Instance Id"
                 },
                 "dateTimeAttribute": "Created At"
             }
@@ -61,6 +253,7 @@
         "columns": [
             "Id",
             "Status",
+            "Status Reason",
             "Created At",
             "Description",
             "Source"
@@ -76,6 +269,7 @@
                 "columnAttributeMappings": {
                     "Id": "Id",
                     "Status": "Status",
+                    "Status Reason": "Status Reason",
                     "Created At": "Created At",
                     "Description": "Description"
                 },
@@ -91,8 +285,57 @@
                 "columnAttributeMappings": {
                     "Id": "Id",
                     "Status": "Status",
+                    "Status Reason": "Status Reason",
                     "Created At": "Created At",
                     "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            },
+            "Work Order": {
+                "modelName": "Activity Work Order",
+                "qualificationName": "By Request Id",
+                "parameterNames": [
+                    "Request Id",
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Status",
+                    "Status Reason": "Status Reason",
+                    "Created At": "Created At",
+                    "Description": "Description"
+                },
+                "dateTimeAttribute": "Created At"
+            }
+        }
+    },
+    
+    "PendingSurvey": {
+        "columns": [
+            "Id",
+            "Status",
+            "Status Reason",
+            "Created At",
+            "Description",
+            "Source",
+            "Has Children",
+            "Instance Id",
+            "Expected Resolution Date",
+            "Requester"
+        ],
+        "sources": {
+            "Survey": {
+                "modelName": "Activity Request",
+                "qualificationName": "Open Survey By Submitter",
+                "parameterNames": [
+                    "Submitter"
+                ],
+                "columnAttributeMappings": {
+                    "Id": "Id",
+                    "Status": "Submission Status",
+                    "Created At": "Created At",
+                    "Description": "Description",
+                    "Instance Id": "Instance Id"
                 },
                 "dateTimeAttribute": "Created At"
             }

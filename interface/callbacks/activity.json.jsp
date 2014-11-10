@@ -130,7 +130,8 @@
                 }
             } catch (Exception e) {
                 e.printStackTrace(System.out);
-                sourceStatuses.put(source, "error");
+			try { logger.debug("Retrieve results error: " + e); } catch (Exception ee) { logger.error("KAAAAAAAAHN! -- It failed: " + ee); }
+			sourceStatuses.put(source, "error");
             }
         }
 

@@ -1,0 +1,26 @@
+<%!
+    public static class PersonBridge extends BridgeBase {
+        private static final Class CLASS = PersonBridge.class;
+        private static final String MODEL_NAME = "People";
+        public PersonBridge() {}
+
+        public static PersonBridge findbyUserId(HelperContext context, String templateId, String LoginId) {
+            // Define the bridge qualification that this method will use.
+            String qualification = "By Login Id";
+            // Build the map of parameters for the qualification above.
+            Map<String, String> parameters = new java.util.HashMap<String, String>();
+            parameters.put("User Login ID", LoginId);
+            // Make the bridge call.
+            return (PersonBridge) BridgeBase.retrieve(context, templateId, MODEL_NAME, qualification, parameters, CLASS);
+        }
+        
+        /*
+         * PersonBridge extends Bridge base so get is avaliable
+        */
+        public String getFirstName() { return get("First Name"); }
+        public String getLastName() { return get("Last Name"); }
+        public String getEmail() { return get("Email"); }
+        public String getLoginID() { return get("User Id"); }
+		public String getPersonID() { return get("Person ID"); }
+    }
+%> 

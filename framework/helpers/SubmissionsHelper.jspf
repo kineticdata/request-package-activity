@@ -1,0 +1,104 @@
+<%!
+    /**
+     * This class provides some helper methods that are to be used within the
+     * submissions package.
+     */
+    public static class SubmissionsHelper {
+	    public static final String FORM_NAME = "KS_TSK_CUSTSRV_TaskInstance_join";
+        public static final String FIELD_CUSTOMER_SURVEY_INSTANCE_ID = "179";
+		public static final String FIELD_ORIGINATING_ID = "600000310";
+        public static final String FIELD_CREATE_DATE = "536870920";
+        public static final String FIELD_ID = "536870921";
+        public static final String FIELD_MODIFIED_DATE = "536870929";
+        public static final String FIELD_NAME = "700000810";
+		public static final String FIELD_HANDLER_NAME = "700000990";
+        public static final String FIELD_SOURCE = "700000840";
+        public static final String FIELD_SOURCE_ID = "700000830";
+        public static final String FIELD_STATUS = "536870931";
+		public static final String FIELD_VALIDATION_STATUS = "536870931";
+        public static final String FIELD_TREE_NAME = "700066802";
+        public static final String FIELD_VISIBLE = "700000914";
+		public static final String FIELD_TOKEN = "536870933";
+        public static final String FIELD_RETURN_VARIABLES = "700000959";
+        public static final String[] FIELD_IDS = new String[] {
+            FIELD_CREATE_DATE, FIELD_CUSTOMER_SURVEY_INSTANCE_ID, FIELD_ID, FIELD_MODIFIED_DATE, FIELD_NAME, FIELD_HANDLER_NAME,
+            FIELD_ORIGINATING_ID, FIELD_SOURCE_ID, FIELD_STATUS, FIELD_TREE_NAME, FIELD_TOKEN, FIELD_RETURN_VARIABLES};
+        /*
+         * This method returns an array of Task instances that are related to
+         * one submission via originating id.  This is useful to get all of the
+         * tasks related to one root submission.  This includes the tasks that
+         * are directly related to the submission as well as tasks that belong
+         * to descendent submissions of the root submission.
+         *
+         * To do this we query a form that joins submissions and tasks with the
+         * specified originating id, which is the instance id of the root
+         * submission.  Then for each record returned, we instantiate a Task
+         * object by passing it a simple entry.  Note that these simple entries
+         * are from a different form than the one defined in the Task model.
+         * The accessors in the Task model should still be able to retrieve the
+         * data from these simple entries as long as the field ids defined in
+         * the Task model represent the same fields on the join form.
+         */
+        public static SubmissionsHelper[] findTasksByOriginatingId(HelperContext context, String originatingId) {
+            // Instantiate the results array.
+            SubmissionsHelper[] results = new SubmissionsHelper[0];
+
+            // Define the form name and the qualification string to be used.
+            String formName = "KS_TSK_CUSTSRV_TaskInstance_join";
+            String qualification = "'OriginatingID' = \"" + originatingId + "\" AND 'Visible'=\"Yes\"";
+
+            // Retrieve the simple entries and instantiate the Task objects.
+            SimpleEntry[] entries = ArsBase.find(context, formName, qualification, FIELD_IDS, new String[]{FIELD_CREATE_DATE}, 0, 0, 1);
+            if (entries != null && entries.length > 0) {
+                results = new  SubmissionsHelper[entries.length];
+                for (int i = 0; i < results.length; i++) {
+                    results[i] = new  SubmissionsHelper(entries[i]);
+                }
+            }
+            
+            // Return the results array.
+            return results;
+        }
+        /* Return the Customer Survey ID for the Task.
+         * This allows us to determine the Sevrice Item (such as a Work Order) that actually created by the Task.
+         */
+        public static String getServiceItemID(HelperContext context, String serviceItemID, String token) {
+            String qualification = "'OriginatingID' = \"" + serviceItemID + "\" AND 'ng_EndpointSecret'=\""+token+"\"";
+
+            // Retrieve the simple entries and instantiate the Task objects.
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS);
+
+            if (entries != null && entries.length > 0) {
+                return entries[0].getEntryFieldValue(FIELD_CUSTOMER_SURVEY_INSTANCE_ID);
+            }
+            return "";
+        }
+        
+        private TaskMessage[] messages = null;
+        
+        private SimpleEntry entry;
+        public SubmissionsHelper(SimpleEntry entry) {
+            this.entry = entry;
+        } 
+        
+        public TaskMessage[] getMessages(HelperContext context) {
+            if (messages == null) {
+                messages = TaskMessage.findByTaskId(context, getId());
+            }
+            return messages;
+        }        
+
+        public String getCreateDate() {return entry.getEntryFieldValue(FIELD_CREATE_DATE);}
+        public String getId() {return entry.getEntryFieldValue(FIELD_ID);}
+		public String getOriginatingId() {return entry.getEntryFieldValue(FIELD_ORIGINATING_ID);}
+        public String getCsrvId() {return entry.getEntryFieldValue(FIELD_CUSTOMER_SURVEY_INSTANCE_ID);}
+        public String getModifiedDate() {return entry.getEntryFieldValue(FIELD_MODIFIED_DATE);}
+        public String getName() {return entry.getEntryFieldValue(FIELD_NAME);}
+        public String getSourceId() {return entry.getEntryFieldValue(FIELD_SOURCE_ID);}
+        public String getStatus() {return entry.getEntryFieldValue(FIELD_STATUS);}
+        public String getTreeName() {return entry.getEntryFieldValue(FIELD_TREE_NAME);}
+        public String getToken() {return entry.getEntryFieldValue(FIELD_TOKEN);}
+		public String getHandlerName() {return entry.getEntryFieldValue(FIELD_HANDLER_NAME);}
+        public String getReturnVariables() {return entry.getEntryFieldValue(FIELD_RETURN_VARIABLES);}
+    }
+%>
