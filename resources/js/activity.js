@@ -78,15 +78,15 @@ jQuery(document).ready(function() {
         // message.
         loadStartCallback: function(self) {
             jQuery("#overlay").show();
-            jQuery("#messages .message").hide();
-            jQuery("#messages .message.loading").show();
+            jQuery("#messages .alert").hide();
+            jQuery("#messages .alert.loading").show();
         },
         // Remove the modal overlay.  If the request returned successfully we
         // update each of the controls with metadata from the call.  We also
         // hide the loading message and display a success message.  If the
         // request returned with an error we will display an error message.
         loadCompleteCallback: function(self) {
-            jQuery("#messages .message.loading").hide();
+            jQuery("#messages .alert.loading").hide();
             if (self.status === "success") {
                 // If this is the first time the table has been loaded we will
                 // generate a checkbox for each source in the sources control.
@@ -95,7 +95,10 @@ jQuery(document).ready(function() {
                 if (jQuery(".tableControls .tableControl.sources .sourcesCheckboxes input[type=checkbox]").length === 0) {
                     var sources = jQuery(".tableControls .tableControl.sources .sourcesCheckboxes");
                     jQuery.each(activityTable.sources, function(index, value) {
-                        var input = jQuery('<div><input type="checkbox" value="' + value + '">' + value + '</option></div>');
+                        var input = jQuery('<div><label><input type="checkbox" value="' + value + '" /> ' + value + '</label></div>');
+						input.click(function(event){
+							event.stopImmediatePropagation();
+						});
                         jQuery(sources).append(input);
                     });
                 }
@@ -122,13 +125,28 @@ jQuery(document).ready(function() {
                 jQuery.each(self.counts, function(index, number) { count += number; });
                 var total = 0;
                 jQuery.each(self.totals, function(index, number) { total += number; });
-                jQuery("#messages .message.success .content").text((offset+1) + "-" + (offset+count) + " of " + total + " records");
-                jQuery("#messages .message.success").show();
+                jQuery("#messages .alert-success .content").text((offset+1) + "-" + (offset+count) + " of " + total + " records");
+                jQuery("#messages .alert-success").show();
             } else if (self.status === "error") {
-                jQuery("#messages .message.error .content").text("There was an error retrieving table data.");
-                jQuery("#messages .message.error").show();
+                jQuery("#messages .alert-error .content").text("There was an error retrieving table data.");
+                jQuery("#messages .alert-.error").show();
             }
             jQuery("#overlay").hide();
+			
+			/* show error for bridges that failed */
+			var errorSources = [];
+			for(var i = 0; i < self.statuses.length; i++){
+				if(self.statuses[i] === "error"){
+					errorSources.push(self.sources[i]);
+				}
+			}
+			if(errorSources.length > 0){
+				var errorContent = "Sources: " + self.errorSources.toString();
+				var sourceErrorText = "<div class='sourceError'>" + BUNDLE.config.sourceError + "<div>";
+				jQuery("#messages .alert-error .content").empty().append(errorContent,sourceErrorText);
+				jQuery("#messages").show().children().hide();
+				jQuery("#messages .alert-error").show();
+			}
         }
     });
     activityTable.initialize();
@@ -143,23 +161,24 @@ jQuery(document).ready(function() {
     jQuery(".tableControls .tableControl.refresh").click(function() {
         activityTable.refreshPage();
     });
-    jQuery(".tableControls .tableControl.sources input.modify").click(function() {
-        jQuery(this).parents(".tableControl.sources").find(".sourcesSelector").slideToggle();
-    });
+
     jQuery(".tableControls .tableControl.sources input.save").click(function() {
-        jQuery(this).parents(".sourcesSelector").slideUp();
         activityTable.sources = [];
         jQuery(this).parents(".tableControl.sources").find(".sourcesCheckboxes input:checked").each(function(index, element) {
             activityTable.sources.push(jQuery(element).val());
         });
         activityTable.initialize();
     });
-    jQuery(".tableControls .tableControl.sortOrder select").change(function() {
-        activityTable.sortOrder = jQuery(this).val();
+    jQuery(".tableControls .tableControl.sortOrder li").click(function() {
+		jQuery(".tableControl.sortOrder li").removeClass("selected");
+		jQuery(this).addClass("selected light-grey");
+        activityTable.sortOrder = jQuery(this).data("value");
         activityTable.initialize();
     });
-    jQuery(".tableControls .tableControl.pageSize select").change(function() {
-        activityTable.pageSize = jQuery(this).val();
+    jQuery(".tableControls .tableControl.pageSize li").click(function() {
+		jQuery(".tableControl.pageSize li").removeClass("selected");
+		jQuery(this).addClass("selected light-grey");
+        activityTable.pageSize = jQuery(this).data("value");
         activityTable.initialize();
     });
 });

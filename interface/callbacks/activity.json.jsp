@@ -117,6 +117,7 @@
         // Initialize a map of source records
         Map<String, RecordList> sourceRecords = new java.util.HashMap<String, RecordList>();
         Map<String, String> sourceStatuses = new java.util.HashMap<String, String>();
+        Map<String, String> sourceErrors = new java.util.HashMap<String, String>();
 
         // Retrieve the results from each of the threads
         for (Map.Entry<String, Future<Map<String, RecordList>>> sourceEntry : workers.entrySet()) {
@@ -131,6 +132,7 @@
             } catch (Exception e) {
                 e.printStackTrace(System.out);
                 sourceStatuses.put(source, "error");
+				sourceErrors.put(source, e.getMessage());
             }
         }
 
@@ -226,6 +228,11 @@
             statusArray.add(sourceStatuses.get(source));
         }
 
+        org.json.simple.JSONArray sourceErrorArray = new org.json.simple.JSONArray();
+        for (String source : sources) {
+            sourceErrorArray.add(sourceErrors.get(source));
+        }
+
         // Build the resulting JSON object for a success.
         org.json.simple.JSONObject result = new org.json.simple.JSONObject();
         result.put("responseCode", 200);
@@ -240,6 +247,7 @@
         result.put("pageSize", pageSize);
         result.put("sortOrder", sortOrder);
         result.put("statuses", statusArray);
+        result.put("errors", sourceErrorArray);
         out.clear();
         out.println(result.toJSONString());
     } catch (Exception e) {

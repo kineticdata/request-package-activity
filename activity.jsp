@@ -3,15 +3,22 @@
 
 <%-- Include the package initialization file. --%>
 <%@include file="framework/includes/packageInitialization.jspf"%>
-
+<%-- Retrieve the Catalog --%>
+<%
+    // Retrieve the main catalog object
+    Catalog catalog = Catalog.findByName(context, customerRequest.getCatalogName());
+    // Preload the catalog child objects (such as Categories, Templates, etc) so
+    // that they are available.  Preloading all of the related objects at once
+    // is more efficient than loading them individually.
+    catalog.preload(context);
+%>
 <!DOCTYPE html>
 
 <html>
     <head>
-        <title><%= bundle.getProperty("catalogName")%></title>
-
         <%-- Include the common content. --%>
-        <%@include file="../../common/interface/fragments/headContent.jspf"%>
+        <%@include file="../../common/interface/fragments/head.jspf"%>
+        <title><%= bundle.getProperty("catalogName")%></title>
         
         <!-- Page Stylesheets -->
         <link rel="stylesheet" href="<%= bundle.packagePath()%>resources/css/activity.css" type="text/css">
@@ -26,23 +33,31 @@
     </head>
 
     <body>
-        <div class="container">
-            <%@include file="../../common/interface/fragments/contentHeader.jspf"%>
-            <div id="contentBody">
-                <div id="messages">
-                    <div class="message success hidden"><span class="label">Viewing: </span><span class="content"></span></div>
-                    <div class="message loading hidden"><span class="label">Loading </span><span class="content"></span><img src="<%= bundle.packagePath()%>resources/images/spinner_00427E_FFFFFF.gif"></div>
-                    <div class="message error hidden"><span class="label">Error: </span><span class="content"></span></div>
+        <div class="view-port">
+            <%@include file="../../common/interface/fragments/navigationSlide.jspf"%>
+            <div class="content-slide" data-target="div.navigation-slide">
+                <%@include file="../../common/interface/fragments/header.jspf"%>
+                <%@include file="../../common/interface/fragments/portalSearchForm.jspf"%>
+                <div class="pointer-events">
+                    <section class="container">
+						<div id="contentBody">
+							<div id="messages" style="display: none;">
+								<div style="display:none"  class="alert alert-success" role="alert"><span class="alert-label">Viewing: </span><span class="content"></span></div>
+								<div style="display:none"  class="loading alert alert-warning" role="alert"><span class="alert-label">Loading </span><span class="content"></span><img src="<%= bundle.packagePath()%>resources/images/spinner_00427E_FFFFFF.gif"></div>
+								<div style="display:none"  class="alert alert-error alert-danger" role="alert"><h4>Error:</h4><div class="content"></div></div>
+							</div>
+							<div id="overlayContainer">
+								<div id="overlay"></div>
+								<%@include file="interface/fragments/defaultControls.jspf"%>
+								<div id="tableContainer">
+									<table id="status" class="table table-striped table-condensed table-hover"></table>
+								</div>
+							</div>
+						</div>
+                    </section>
                 </div>
-                <div id="overlayContainer">
-                    <div id="overlay"></div>
-                    <%@include file="interface/fragments/defaultControls.jspf"%>
-                    <div id="tableContainer">
-                        <table id="status"></table>
-                    </div>
-                </div>
+                <%@include file="../../common/interface/fragments/footer.jspf"%>
             </div>
-            <%@include file="../../common/interface/fragments/contentFooter.jspf"%>
         </div>
     </body>
 </html>

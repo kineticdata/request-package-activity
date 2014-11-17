@@ -1,28 +1,43 @@
-<div class="tableControls">
-    <div class="tableControl sources">
-        <span>Sources</span> <input class="modify" type="button" value="Modify"></input>
-        <div class="sourcesSelector hidden">
-            <div class="sourcesCheckboxes"></div>
-            <input class="save" type="button" value="Save"></input>
-        </div>
+<div class="tableControls btn-toolbar">
+    <div class="tableControl sources pull-left btn-group btn-group-sm">
+		<button class="modify btn btn-sm btn-primary dropdown-toggle" value="Modify" type="button" data-toggle="dropdown" aria-expanded="true" id="dropdownMenu1">
+			Sources
+			<span class="caret"></span>
+		</button>
+        <ul class="sourcesSelector dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			<li class="sourcesCheckboxes"></li>
+			<li roll="menu-item"><input class="save" type="button" class="btn btn-sm btn-primary" value="Save"></input></li>
+		</ul>
     </div>
-    <div class="tableControl previousPage">Previous</div>
-    <div class="tableControl refresh">Refresh</div>
-    <div class="tableControl nextPage">Next</div>
-    <div class="tableControl sortOrder">
-        <span>Sort</span> <select>
-            <option value="descending">Latest</option>
-            <option value="ascending">Oldest</option>
-        </select>
-    </div>
-    <div class="tableControl pageSize">
-        <span>Show</span> <select>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-        </select>
-    </div>
-    <div class="clear"></div>
+	<div class="btn-group  btn-group-sm pull-right" role="group" aria-label="...">
+		<button class="tableControl previousPage btn btn-primary">Previous</button>
+		<button class="tableControl refresh btn btn-primary">Refresh</button>
+		<button class="tableControl nextPage btn btn-primary">Next</button>
+		
+		  <div class="tableControl sortOrder btn-group btn-group-sm" role="group">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			  Sort
+			  <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+			  <li data-value="descending">Newest</li>
+			  <li data-value="ascending">Oldest</li>
+			</ul>
+		  </div>
+		  
+		  <div class="tableControl pageSize btn-group  btn-group-sm" role="group">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			  Show
+			  <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+			  <li data-value="5">5</li>
+			  <li data-value="10">10</li>
+			  <li data-value="15">15</li>
+			  <li data-value="20">20</li>
+			  <li data-value="25">25</li>
+			</ul>
+		  </div>
+
+	</div>
 </div>

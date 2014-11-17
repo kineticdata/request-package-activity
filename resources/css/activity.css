@@ -1,45 +1,23 @@
 /*
- * This stylesheet contains style properties that apply to the table and the
- * controls for the table.
- *
- * These style properties are applied to the table controls displayed on the
- * page.
+ * Adding margin below the controls
  */
-.tableControls .tableControl {
-    background-color: #A1A1A1;
-    color: #FFFFFF;
-    cursor: pointer;
-    float: left;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 24px; /* This is equal to the height of the button element in the sources control */
-    margin-right: 5px;
-    padding: 2px 5px;
-    vertical-align: top;
+.tableControls {
+	margin-bottom: 20px;
 }
-.tableControls .tableControl.pageSize, .tableControls .tableControl.sortOrder {
-    float: right;
+ul.dropdown-menu {
+	min-width: 1px;
 }
-.tableControls .tableControl.sources {
-    position: relative;
+ul.dropdown-menu  li{
+	margin: 0 10px;
+	white-space: nowrap;
+	cursor: pointer;
 }
-.tableControls .tableControl.sources .sourcesSelector {
-    background-color: #A1A1A1;
-    left: 0;
-    position: absolute;
-    top: 28px; /* This is equal to the rendered height of the sources control */
-    width: 100%;
-    z-index: 1;
+ul.dropdown-menu li label {
+	font-weight: normal;
 }
-.tableControls .tableControl.sources .sourcesSelector .sourcesCheckboxes div {
-    padding: 2px;
-    white-space: nowrap;
+ul.dropdown-menu  li.selected{
+	font-weight: bold;
 }
-.tableControls .tableControl.sources .sourcesSelector .sourcesCheckboxes div input {
-    margin: 3px;
-}
-
 /*
  * The style properties below apply to the activity table.  Note that if the
  * implementation contains child tables they will also be affected most of the
@@ -48,58 +26,6 @@
 table#status tr {
     height: 30px;
 }
-/*
- * These properties that apply the zebra striping only apply to the main table.
- * If you wish to modify it to apply to any tables within simply remove the
- * greater-than characters from the selector.
- */
-table#status > tbody > tr.even { background: #E0E0E0; }
-table#status > tbody > tr.odd  { background: #E9E9E9; }
-table#status td {
-    padding: 0;
-}
-table#status td.links {
-    text-align: center;
-}
-table#status td.links a.minimize,
-table#status td.links a.maximize {
-    font-size: 18px;
-    font-family: monospace;
-    font-weight: bold;
-    text-decoration: none;
-}
-table#status td.source {
-    color: #777777;
-    font-weight: bold;
-}
-/*
- * This set of properties is applied to prevent the table cell elements from
- * expanding which makes it easier to style the table consistently.  When the
- * content would normally expand the width of the cell (because there is no
- * white-space for a line break) a hard break is made where necessary.  Note
- * that it will still break on white-space if available.  Also this desgin
- * requires the element to have an explicit width, which we default here to 150
- * pixels.  To override this width add another style class to the element and
- * define a width for that class (see below for examples of this).
- */
-table#status td .wrapper {
-    overflow: hidden;
-    width: 150px;
-    white-space: pre-wrap; /* css-3 */
-    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
-    white-space: pre;
-    white-space: -hp-pre-wrap; /* HP Printers */
-    white-space: pre-line;
-}
-table#status td .wrapper.links        { width: 35px; }
-table#status td .wrapper.id           { width: 140px; }
-table#status td .wrapper.status       { width: 130px; }
-table#status td .wrapper.createdAt    { width: 170px; }
-table#status td .wrapper.description  { width: 400px; }
-table#status td .wrapper.source       { width: 85px; }
 
 /*
  * These styles are applied to the child table that is added by adding a row

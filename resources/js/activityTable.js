@@ -88,10 +88,12 @@ ActivityTable.prototype.doRequest = function(offsets, callback) {
         name: this.name,
         templateId: this.templateId
     };
+
     if (this.sources !== undefined) {data["sources"] = this.sources.join(",");}
     if (this.pageSize !== undefined) {data["pageSize"] = this.pageSize;}
     if (this.sortOrder !== undefined) {data["sortOrder"] = this.sortOrder;}
     if (offsets) {data["offsets"] = offsets.join(",");}
+	
     jQuery.ajax({
         url: BUNDLE.packagePath + "interface/callbacks/activity.json.jsp",
         data: data,
@@ -101,12 +103,14 @@ ActivityTable.prototype.doRequest = function(offsets, callback) {
             if (response["responseCode"] === 200) {
                 this.status = "success";
                 this.sources = response["sources"];
+                this.statuses = response["statuses"];
                 this.columns = response["columns"];
                 this.sortOrder = response["sortOrder"];
                 this.pageSize = response["pageSize"];
                 this.counts = response["counts"];
                 this.totals = response["totals"];
                 this.recordSources = response["recordSources"];
+                this.responseText = response["responseText"];
                 if (callback) {callback(response);}
                 if (this.loadCompleteCallback) {this.loadCompleteCallback(this);}
             } else {
